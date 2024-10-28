@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,8 @@ namespace BaseLibrary.Entities
 {
 	public class PurchaseOrder
 	{
-		public int Id { get; set; }
+		[Key]
+		public int PurchaseOrderId { get; set; }
 		public string? Division { get; set; }
 		public string? Remark { get; set; }
 
