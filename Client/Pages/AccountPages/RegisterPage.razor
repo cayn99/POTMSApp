@@ -1,5 +1,7 @@
 ﻿@page "/identity/account/register"
 @using Client.Pages.OtherPages
+@using Syncfusion.Blazor.Popups
+@inject SfDialogService DialogService
 @layout AuthenticationLayout
 
 <div class="container">
@@ -9,13 +11,6 @@
             <div class="card bg-light mx-auto" style="margin-top:7%; border-radius:10px; font-weight:bold; max-width:400px">
                 <div class="card-header text-center">Fill this form to Register</div>
                 <div class="card-body">
-                    <!-- Alert message -->
-                    @if (isRegistrationSuccessful)
-                    {
-                        <div class="alert alert-success" role="alert">
-                            Registered Successfully!
-                        </div>
-                    }
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
                         <InputText @bind-Value="User.FullName" class="form-control" placeholder="Given name first (Ex. Juan Dela Cruz)" aria-label="FullName" />
@@ -82,7 +77,6 @@
     Register User = new();
     private bool isPasswordVisible = false;
     private bool isConfirmPasswordVisible = false;
-    private bool isRegistrationSuccessful = false;
 
     // Determine input type based on visibility
     private string passwordInputType => isPasswordVisible ? "text" : "password";
@@ -97,6 +91,11 @@
     {
         isConfirmPasswordVisible = !isConfirmPasswordVisible;
     }
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        await CheckUserAuthentication();
+    }
 
     async Task HandleRegistration()
     {
@@ -104,15 +103,26 @@
         var result = await accountService.CreateAsync(User);
         if (result.Flag)
         {
+            await DisplayDialog(result.Message, "Success!");
             User = new();
-            isRegistrationSuccessful = true;
         }
         else
         {
-            // Handle registration failure
-            isRegistrationSuccessful = false;
+            await DisplayDialog(result.Message, "Alert!");
         }
         ShowLoadingButton = false;
+    }
+    private async Task DisplayDialog(string content, string title)
+    {
+        await DialogService.AlertAsync(content, title);
+    }
+
+    private async Task CheckUserAuthentication()
+    {
+        var user = (await AuthenticationState).User;
+        bool isUserAuthenticated = user.Identity!.IsAuthenticated;
+        if (isUserAuthenticated)
+            NavManager.NavigateTo("/home/dashboard");
     }
 }
 

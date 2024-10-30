@@ -1,6 +1,8 @@
 ﻿@page "/identity/account/login"
 @using Client.Pages.OtherPages
+@using Syncfusion.Blazor.Popups
 @layout AuthenticationLayout
+@inject SfDialogService DialogService
 
 <div class="container">
     <div class="row">
@@ -46,27 +48,52 @@
 </div>
 
 @code {
-        public bool ShowLoadingButton { get; set; } = false;
-        Login User = new();
-        private bool isPasswordVisible = false;
+    public bool ShowLoadingButton { get; set; } = false;
+    Login User = new();
+    private bool isPasswordVisible = false;
 
-        private string passwordInputType => isPasswordVisible ? "text" : "password";
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
 
     private void TogglePasswordVisibility()
     {
         isPasswordVisible = !isPasswordVisible;
     }
-        async Task HandleLogin()
+
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        await CheckUserAuthentication();
+    }
+
+    async Task HandleLogin()
+    {
+        ShowLoadingButton = true;
+        var result = await accountService.SignInAsync(User);
+        if (result.Flag)
         {
-            ShowLoadingButton = true;
-            var result = await accountService.SignInAsync(User);
-            if (result.Flag)
-            {
-                var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-                await customAuthStateProvider.UpdateAuthenticationState(new UserSession()
+            await DisplayDialog(result.Message, "Success!");
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession()
                 { Token = result.Token, RefreshToken = result.RefreshToken });
-                NavManager.NavigateTo("/", forceLoad: true);
-            }
-            ShowLoadingButton = false;
+            NavManager.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            await DisplayDialog(result.Message, "Alert!");
+        }
+        ShowLoadingButton = false;
+    }
+
+    private async Task DisplayDialog(string content, string title)
+    {
+        await DialogService.AlertAsync(content, title);
+    }
+
+    private async Task CheckUserAuthentication()
+    {
+        var user = (await AuthenticationState).User;
+        bool isUserAuthenticated = user.Identity!.IsAuthenticated;
+        if (isUserAuthenticated)
+            NavManager.NavigateTo("/home/dashboard");
     }
 }
