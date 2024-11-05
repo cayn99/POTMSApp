@@ -1,0 +1,93 @@
+﻿@using Client.ApplicationStates
+@implements IDisposable
+@inject RequestState requestState
+@if (requestState.ShowRequest)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">Requests</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog"><i class="bi bi-plus-circle-dotted"></i> Add Request </button>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Record Number</th>
+                                        <th scope="col">Division</th>
+                                        <th scope="col">Project Code</th>
+                                        <th scope="col">Fund Source</th>
+                                        <th scope="col">Date Received</th>
+                                        <th scope="col">Request Number</th>
+                                        <th scope="col">Request Date</th>
+                                        <th scope="col">Order Number</th>
+                                        <th scope="col">Order Date</th>
+                                        <th scope="col">Supplier</th>
+                                        <th scope="col">Particulars</th>
+                                        <th scope="col">Requestor</th>
+                                        <th scope="col">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>PPID</td>
+                                        <td>PR01</td>
+                                        <td>Sample</td>
+                                        <td>10/09/2024</td>
+                                        <td>1</td>
+                                        <td>10/09/2024</td>
+                                        <td>1</td>
+                                        <td>10/09/2024</td>
+                                        <td>Sample</td>
+                                        <td>Keyboard</td>
+                                        <td>Michael Yvan T. Singue</td>
+                                        <td>2000PHP</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>PPID</td>
+                                        <td>PR02</td>
+                                        <td>Sample</td>
+                                        <td>10/09/2024</td>
+                                        <td>2</td>
+                                        <td>10/09/2024</td>
+                                        <td>2</td>
+                                        <td>10/09/2024</td>
+                                        <td>Sample</td>
+                                        <td>Monitor</td>
+                                        <td>Catherine V. Desuyo</td>
+                                        <td>3000PHP</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<RequestDialog @ref="requestDialog"/>
+@code {
+    RequestDialog? requestDialog;
+    RequestDTO Request = new();
+
+    protected override void OnInitialized()
+    {
+        requestState.RequestAction += StateHasChanged;
+    }
+
+    void OpenDialog()
+    {
+        requestDialog?.OpenDialog();
+    }
+
+    public void Dispose()
+    {
+        requestState.RequestAction -= StateHasChanged;
+    }
+}

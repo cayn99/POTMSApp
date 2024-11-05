@@ -1,9 +1,12 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@page "/nav"
+@using Client.ApplicationStates
+@using Microsoft.AspNetCore.Components.Authorization
+@inject RequestState requestState
 
 <AuthorizeView>
     <Authorized>
         <div class="top-row ps-3 navbar navbar-dark">
-            <div class="contrainer-fluid">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="">
                     Welcome,@context.User.Identity!.Name
                 </a>
@@ -33,43 +36,43 @@
                     <span>Administration</span>
                 </div>
             </NavLink>
-            <a class="nav-link p-2 text-white" style="margin: 5rem; visibility: @CssStyle">
+                    <a class="nav-link p-2 text-white" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle">
                 <div class="hstack">
-                    <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin: -2rem"></span>
+                    <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                     <span>Users</span>
                 </div>
             </a>
         </div>
-        <div class="nav-item px-3" style="margin-top: @DepartmentMargin">
-            <NavLink class="nav-link p-2" @onclick="ShowDepartmentContainer" style="cursor: pointer;" href="javascript: void()">
-                <div class="hsatck gap-1">
-                    <span class="bi bi-backpack4-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                    <span>Department</span>
+        <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
+            <NavLink class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" href="javascript: void()">
+                <div class="hstack gap-1">
+                    <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                    <span>Purchase Orders</span>
                 </div>
             </NavLink>
-            <div class="nav-link p-2 text-white" style="margin-left: 5rem; visibility: @DepartmentCssStyle">
+            <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @PurchaseOrderCssStyle">
                 <ul class="list-group">
-                    <li style="list-style: none" class="cursorStyle">
-                        <a class="nav-link p-2 @onclick="GeneralDepartmentClicked">
+                    <li style="list-style: none; cursor: pointer" class="cursorStyle">
+                        <a class="nav-link p-2" @onclick="RequestClicked">
                             <div class="hstack text-wrap">
-                            <span class="bi bi-file-medical fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                            <span class="fs-6">General</span>
+                            <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span class="fs-6">Requests</span>
                             </div>
                         </a>
                     </li>
-                    <li style="list-style:none" class="cursorStyle">
+                    <li style="list-style:none; cursor: pointer" class="cursorStyle">
                         <a class="nav-link p-2">
                             <div class="hstack">
-                                <span class="bi bi-substack fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                                <span>Department</span>
+                                <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                                <span>Deliveries</span>
                             </div>
                         </a>
                     </li>
-                    <li style="list-style: none" class="cursorStyle">
+                            <li style="list-style: none; cursor: pointer" class="cursorStyle">
                         <a class="nav-link p-2">
                             <div class="hstack">
-                                <span class="bi bi-chevron-bar-contract fs-5 text-center" aria-hidden="true" style="margin: -2rem"></span>
-                            <span>Branch</span>
+                                <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true"style ="margin-top: -2rem"></span>
+                            <span>Complete Orders</span>
                             </div>
                         </a>
                     </li>
@@ -91,7 +94,7 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public string DepartmentMargin { get; set; } = "-3.5rem";
+    public string PurchaseOrderMargin { get; set; } = "-3.5rem";
     private string CssStyle = "hidden";
     public bool ShowHide { get; set; } = false;
 
@@ -100,24 +103,29 @@
         ShowHide = !ShowHide;
         if (ShowHide)
         {
-            DepartmentMargin = "0";
+            PurchaseOrderMargin = "0";
             CssStyle = "visible";
         }
         else
         {
-            DepartmentMargin = "-3.5rem";
+            PurchaseOrderMargin = "-3.5rem";
             CssStyle = "hidden";
         }
     }
 
-    private string DepartmentCssStyle = "hidden";
-    public bool ShowHideDepartment { get; set; } = false;
-    private void ShowDepartmentContainer()
+    private string PurchaseOrderCssStyle = "hidden";
+    public bool ShowHidePurchaseOrder { get; set; } = false;
+    private void ShowPurchaseOrderContainer()
     {
-        ShowHideDepartment = !ShowHideDepartment;
-        if (ShowHideDepartment)
-            DepartmentCssStyle = "visible";
+        ShowHidePurchaseOrder = !ShowHidePurchaseOrder;
+        if (ShowHidePurchaseOrder)
+            PurchaseOrderCssStyle = "visible";
         else
-            DepartmentCssStyle = "hidden";
+            PurchaseOrderCssStyle = "hidden";
+    }
+
+    void RequestClicked()
+    {
+        requestState.RequestClicked();
     }
 }

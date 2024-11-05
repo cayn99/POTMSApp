@@ -1,7 +1,8 @@
 ﻿@page "/home/dashboard"
 @using Client.Pages.AdministrationPages
+@using Client.Pages.PurchaseOrderPages
 <TableBanner/>
-
+<RequestPage/>
 @code {
         [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
     protected async override Task OnInitializedAsync()

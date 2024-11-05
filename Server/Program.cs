@@ -21,6 +21,7 @@ builder.Services.Configure<JwtSection>(builder.Configuration.GetSection("JwtSect
 var jwtSection = builder.Configuration.GetSection(nameof(JwtSection)).Get<JwtSection>();
 
 // starting
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")??
@@ -55,6 +56,7 @@ builder.Services.AddCors(options =>
 		.AllowCredentials());
 });
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
