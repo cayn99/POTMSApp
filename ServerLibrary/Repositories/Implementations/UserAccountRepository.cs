@@ -34,6 +34,9 @@ namespace ServerLibrary.Repositories.Implementations
 			{
 				FullName = user.FullName,
 				Email = user.Email,
+				Division = user.Division,
+				Position = user.Position,
+				IdCode = user.IdCode,
 				Password = BCrypt.Net.BCrypt.HashPassword(user.Password)
 			});
 
@@ -42,7 +45,7 @@ namespace ServerLibrary.Repositories.Implementations
 			{
 				var createAdminRole = await AddToDatabase(new SystemRole() { Name = Constants.Admin });
 				await AddToDatabase(new UserRole() { RoleId = createAdminRole.Id, UserId = applicationUser.Id });
-				return new GeneralResponse(true, "Account created!");
+				return new GeneralResponse(true, "Admin account created!");
 			}
 
 			var checkUserRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.User));
@@ -56,7 +59,7 @@ namespace ServerLibrary.Repositories.Implementations
 			{
 				await AddToDatabase(new UserRole() { RoleId = checkUserRole.Id, UserId = applicationUser.Id });
 			}
-			return new GeneralResponse(true, "Account created!");
+			return new GeneralResponse(true, "User account created!");
 		}
 
 		public async Task<LoginResponse> SignInAsync(Login user)
@@ -107,7 +110,7 @@ namespace ServerLibrary.Repositories.Implementations
 				issuer: config.Value.Issuer,
 				audience: config.Value.Audience,
 				claims: userClaims,
-				expires: DateTime.Now.AddSeconds(2),
+				expires: DateTime.Now.AddMinutes(1),
 				signingCredentials: credentials);
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
