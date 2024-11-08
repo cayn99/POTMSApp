@@ -15,80 +15,90 @@ namespace ServerLibrary.Data.Migrations
                 name: "AccountingComplete",
                 columns: table => new
                 {
-                    AccountingCompleteId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Cancelled = table.Column<bool>(type: "bit", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Penalty = table.Column<bool>(type: "bit", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountingComplete", x => x.AccountingCompleteId);
+                    table.PrimaryKey("PK_AccountingComplete", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Coa",
                 columns: table => new
                 {
-                    CoaId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderCopy = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InspectionRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
                     InspectionReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Coa", x => x.CoaId);
+                    table.PrimaryKey("PK_Coa", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Inspections",
                 columns: table => new
                 {
-                    InspectionId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DateInspected = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Inspector = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateAccepted = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Inspections", x => x.InspectionId);
+                    table.PrimaryKey("PK_Inspections", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrderReceived",
                 columns: table => new
                 {
-                    OrderReceivedId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeliveryDays = table.Column<int>(type: "int", nullable: false),
                     ExtensionLetter = table.Column<bool>(type: "bit", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderReceived", x => x.OrderReceivedId);
+                    table.PrimaryKey("PK_OrderReceived", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokenInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokenInfos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Requests",
                 columns: table => new
                 {
-                    RecordNumber = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RecordNumber = table.Column<int>(type: "int", nullable: false),
                     Division = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProjectCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FundSource = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -101,11 +111,38 @@ namespace ServerLibrary.Data.Migrations
                     Particulars = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Requestor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Requests", x => x.RecordNumber);
+                    table.PrimaryKey("PK_Requests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,6 +151,7 @@ namespace ServerLibrary.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Division = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -129,7 +167,7 @@ namespace ServerLibrary.Data.Migrations
                 name: "AccountingApprovals",
                 columns: table => new
                 {
-                    AccountingApprovalId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -139,17 +177,16 @@ namespace ServerLibrary.Data.Migrations
                     ThirdPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     FourthPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     AccountingCompleteId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountingApprovals", x => x.AccountingApprovalId);
+                    table.PrimaryKey("PK_AccountingApprovals", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AccountingApprovals_AccountingComplete_AccountingCompleteId",
                         column: x => x.AccountingCompleteId,
                         principalTable: "AccountingComplete",
-                        principalColumn: "AccountingCompleteId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -157,23 +194,22 @@ namespace ServerLibrary.Data.Migrations
                 name: "OrderDeliveries",
                 columns: table => new
                 {
-                    OrderDeliveryId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Schedule = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Conforme = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderReceivedId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderDeliveries", x => x.OrderDeliveryId);
+                    table.PrimaryKey("PK_OrderDeliveries", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrderDeliveries_OrderReceived_OrderReceivedId",
                         column: x => x.OrderReceivedId,
                         principalTable: "OrderReceived",
-                        principalColumn: "OrderReceivedId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -184,19 +220,13 @@ namespace ServerLibrary.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Division = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Remark = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestId = table.Column<int>(type: "int", nullable: false),
                     OrderDeliveryId = table.Column<int>(type: "int", nullable: false),
                     AccountingApprovalId = table.Column<int>(type: "int", nullable: false),
                     InspectionId = table.Column<int>(type: "int", nullable: false),
                     CoaId = table.Column<int>(type: "int", nullable: false),
-                    AccountingApprovalId1 = table.Column<int>(type: "int", nullable: true),
-                    AccountingCompleteId = table.Column<int>(type: "int", nullable: true),
-                    CoaId1 = table.Column<int>(type: "int", nullable: true),
-                    InspectionId1 = table.Column<int>(type: "int", nullable: true),
-                    OrderDeliveryId1 = table.Column<int>(type: "int", nullable: true),
-                    OrderReceivedId = table.Column<int>(type: "int", nullable: true),
-                    RequestRecordNumber = table.Column<int>(type: "int", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,67 +235,32 @@ namespace ServerLibrary.Data.Migrations
                         name: "FK_PurchaseOrders_AccountingApprovals_AccountingApprovalId",
                         column: x => x.AccountingApprovalId,
                         principalTable: "AccountingApprovals",
-                        principalColumn: "AccountingApprovalId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_AccountingApprovals_AccountingApprovalId1",
-                        column: x => x.AccountingApprovalId1,
-                        principalTable: "AccountingApprovals",
-                        principalColumn: "AccountingApprovalId");
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_AccountingComplete_AccountingCompleteId",
-                        column: x => x.AccountingCompleteId,
-                        principalTable: "AccountingComplete",
-                        principalColumn: "AccountingCompleteId");
                     table.ForeignKey(
                         name: "FK_PurchaseOrders_Coa_CoaId",
                         column: x => x.CoaId,
                         principalTable: "Coa",
-                        principalColumn: "CoaId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_Coa_CoaId1",
-                        column: x => x.CoaId1,
-                        principalTable: "Coa",
-                        principalColumn: "CoaId");
                     table.ForeignKey(
                         name: "FK_PurchaseOrders_Inspections_InspectionId",
                         column: x => x.InspectionId,
                         principalTable: "Inspections",
-                        principalColumn: "InspectionId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_Inspections_InspectionId1",
-                        column: x => x.InspectionId1,
-                        principalTable: "Inspections",
-                        principalColumn: "InspectionId");
                     table.ForeignKey(
                         name: "FK_PurchaseOrders_OrderDeliveries_OrderDeliveryId",
                         column: x => x.OrderDeliveryId,
                         principalTable: "OrderDeliveries",
-                        principalColumn: "OrderDeliveryId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_OrderDeliveries_OrderDeliveryId1",
-                        column: x => x.OrderDeliveryId1,
-                        principalTable: "OrderDeliveries",
-                        principalColumn: "OrderDeliveryId");
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_OrderReceived_OrderReceivedId",
-                        column: x => x.OrderReceivedId,
-                        principalTable: "OrderReceived",
-                        principalColumn: "OrderReceivedId");
                     table.ForeignKey(
                         name: "FK_PurchaseOrders_Requests_RequestId",
                         column: x => x.RequestId,
                         principalTable: "Requests",
-                        principalColumn: "RecordNumber",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_Requests_RequestRecordNumber",
-                        column: x => x.RequestRecordNumber,
-                        principalTable: "Requests",
-                        principalColumn: "RecordNumber");
                 });
 
             migrationBuilder.CreateIndex(
@@ -287,25 +282,10 @@ namespace ServerLibrary.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_AccountingApprovalId1",
-                table: "PurchaseOrders",
-                column: "AccountingApprovalId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_AccountingCompleteId",
-                table: "PurchaseOrders",
-                column: "AccountingCompleteId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_CoaId",
                 table: "PurchaseOrders",
                 column: "CoaId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_CoaId1",
-                table: "PurchaseOrders",
-                column: "CoaId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_InspectionId",
@@ -314,36 +294,16 @@ namespace ServerLibrary.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_InspectionId1",
-                table: "PurchaseOrders",
-                column: "InspectionId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_OrderDeliveryId",
                 table: "PurchaseOrders",
                 column: "OrderDeliveryId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_OrderDeliveryId1",
-                table: "PurchaseOrders",
-                column: "OrderDeliveryId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_OrderReceivedId",
-                table: "PurchaseOrders",
-                column: "OrderReceivedId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PurchaseOrders_RequestId",
                 table: "PurchaseOrders",
                 column: "RequestId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_RequestRecordNumber",
-                table: "PurchaseOrders",
-                column: "RequestRecordNumber");
         }
 
         /// <inheritdoc />
@@ -351,6 +311,15 @@ namespace ServerLibrary.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "PurchaseOrders");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokenInfos");
+
+            migrationBuilder.DropTable(
+                name: "SystemRoles");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Users");

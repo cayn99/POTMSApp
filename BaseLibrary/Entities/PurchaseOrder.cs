@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class PurchaseOrder
+	public class PurchaseOrder : BaseEntity
 	{
-		[Key]
-		public int PurchaseOrderId { get; set; }
 		public string? Division { get; set; }
-		public string? Remark { get; set; }
+        [Required, DataType(DataType.Text)]
+        public string? Remarks { get; set; }
 
 		public int RequestId { get; set; }
 		public Request? Request { get; set; }

@@ -9,11 +9,11 @@ namespace BaseLibrary.Entities
 {
 	public class AccountingComplete : BaseEntity
 	{
-		[Key]
-		public int AccountingCompleteId { get; set; }
 		public bool Cancelled { get; set; }
-		public decimal Amount { get; set; }
-		public decimal Balance { get; set; }
+        [Required, DataType(DataType.Currency)]
+        public decimal Amount { get; set; }
+        [Required, DataType(DataType.Currency)]
+        public decimal Balance { get; set; }
 		public bool Penalty { get; set; }
 		public AccountingApproval? AccountingApproval { get; set; }
 	}

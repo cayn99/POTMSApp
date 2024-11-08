@@ -9,10 +9,9 @@ namespace BaseLibrary.Entities
 {
 	public class OrderReceived : BaseEntity
 	{
-		[Key]
-		public int OrderReceivedId { get; set; }
-		public DateTime DateReceived { get; set; }
-		public int DeliveryDays { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime DateReceived { get; set; }
+		public int DeliveryDays => (DateReceived - OrderDelivery.Schedule).Days;
 		public bool ExtensionLetter { get; set; }
 		public OrderDelivery? OrderDelivery { get; set; }
 	}

@@ -102,17 +102,17 @@
             await dialogService.AlertAsync("You need to provide Request's Record Number.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.Division))
+        if (string.IsNullOrEmpty(Requests.Division))
         {
             await dialogService.AlertAsync("Division is required.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.ProjectCode))
+        if (string.IsNullOrEmpty(Requests.ProjectCode))
         {
             await dialogService.AlertAsync("Project Code is required.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.FundSource))
+        if (string.IsNullOrEmpty(Requests.FundSource))
         {
             await dialogService.AlertAsync("Fund Source is required.", "Alert!");
             return;
@@ -127,17 +127,17 @@
             await dialogService.AlertAsync("Order Number is required.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.Supplier))
+        if (string.IsNullOrEmpty(Requests.Supplier))
         {
             await dialogService.AlertAsync("Supplier is required.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.Particulars))
+        if (string.IsNullOrEmpty(Requests.Particulars))
         {
             await dialogService.AlertAsync("State the Particulars.", "Alert!");
             return;
         }
-        if (string.IsNullOrWhiteSpace(Requests.Requestor))
+        if (string.IsNullOrEmpty(Requests.Requestor))
         {
             await dialogService.AlertAsync("Requestor is required.", "Alert!");
             return;

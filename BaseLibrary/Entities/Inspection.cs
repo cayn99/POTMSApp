@@ -10,13 +10,14 @@ namespace BaseLibrary.Entities
 {
 	public class Inspection : BaseEntity
 	{
-		[Key]
-		public int InspectionId { get; set; }
-		public IStatus Status { get; set; }
-		public DateTime DateInspected { get; set; }
-		public required string Inspector { get; set; }
-		public DateTime DateAccepted { get; set; }
-		public required string AcceptedBy { get; set; }
+        [Required]
+        public IStatus Status { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime DateInspected { get; set; }
+        public required string Inspector { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime DateAccepted { get; set; }
+        public required string AcceptedBy { get; set; }
 		public PurchaseOrder? PurchaseOrder { get; set; }
 	}
 }

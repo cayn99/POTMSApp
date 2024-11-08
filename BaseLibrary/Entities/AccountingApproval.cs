@@ -9,18 +9,23 @@ namespace BaseLibrary.Entities
 {
 	public class AccountingApproval : BaseEntity
 	{
-			[Key]
-			public int AccountingApprovalId { get; set; }
-			public DateTime DateReceived { get; set; }
-			public required string ReceivedBy { get; set; }
-			public Status Status { get; set; }
-			public decimal FirstPayment { get; set; }
-			public decimal? SecondPayment { get; set; }
-			public decimal? ThirdPayment { get; set; }
-			public decimal? FourthPayment { get; set; }
-			public int AccountingCompleteId { get; set; }
-			public AccountingComplete? AccountingComplete { get; set; }
-			public PurchaseOrder? PurchaseOrder { get; set; }
+		[Required, DataType(DataType.DateTime)]
+		public DateTime DateReceived { get; set; }
+        [Required]
+        public required string ReceivedBy { get; set; }
+        [Required]
+        public Status Status { get; set; }
+        [Required, DataType(DataType.Currency)]
+        public decimal FirstPayment { get; set; }
+        [DataType(DataType.Currency)]
+		public decimal? SecondPayment { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal? ThirdPayment { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal? FourthPayment { get; set; }
+		public int AccountingCompleteId { get; set; }
+		public AccountingComplete? AccountingComplete { get; set; }
+		public PurchaseOrder? PurchaseOrder { get; set; }
 		}
 	}
 

@@ -24,11 +24,11 @@ namespace ServerLibrary.Data.Migrations
 
             modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
                 {
-                    b.Property<int>("AccountingApprovalId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountingApprovalId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccountingCompleteId")
                         .HasColumnType("int");
@@ -36,17 +36,15 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<DateTime>("DateReceived")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("FirstPayment")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("FourthPayment")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceivedBy")
                         .IsRequired()
@@ -61,7 +59,7 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<decimal?>("ThirdPayment")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("AccountingApprovalId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AccountingCompleteId")
                         .IsUnique();
@@ -71,11 +69,11 @@ namespace ServerLibrary.Data.Migrations
 
             modelBuilder.Entity("BaseLibrary.Entities.AccountingComplete", b =>
                 {
-                    b.Property<int>("AccountingCompleteId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountingCompleteId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -86,21 +84,290 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<bool>("Cancelled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Division")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Penalty")
                         .HasColumnType("bit");
 
-                    b.HasKey("AccountingCompleteId");
+                    b.HasKey("Id");
 
                     b.ToTable("AccountingComplete");
                 });
 
-            modelBuilder.Entity("BaseLibrary.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("InspectionReceivedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InspectionRequest")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderCopy")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReceivedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coa");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AcceptedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateAccepted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateInspected")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Inspector")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inspections");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Conforme")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderReceivedId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Schedule")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderReceivedId")
+                        .IsUnique();
+
+                    b.ToTable("OrderDeliveries");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateReceived")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("ExtensionLetter")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderReceived");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountingApprovalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Division")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InspectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderDeliveryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountingApprovalId")
+                        .IsUnique();
+
+                    b.HasIndex("CoaId")
+                        .IsUnique();
+
+                    b.HasIndex("InspectionId")
+                        .IsUnique();
+
+                    b.HasIndex("OrderDeliveryId")
+                        .IsUnique();
+
+                    b.HasIndex("RequestId")
+                        .IsUnique();
+
+                    b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.RefreshTokenInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefreshTokenInfos");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DateReceived")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Division")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FundSource")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Particulars")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RecordNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RequestNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Requestor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Supplier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.SystemRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemRoles");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,314 +396,6 @@ namespace ServerLibrary.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
-                {
-                    b.Property<int>("CoaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CoaId"));
-
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("InspectionReceivedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("InspectionRequest")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("OrderCopy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReceivedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CoaId");
-
-                    b.ToTable("Coa");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
-                {
-                    b.Property<int>("InspectionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InspectionId"));
-
-                    b.Property<string>("AcceptedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateAccepted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateInspected")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Inspector")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("InspectionId");
-
-                    b.ToTable("Inspections");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
-                {
-                    b.Property<int>("OrderDeliveryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDeliveryId"));
-
-                    b.Property<DateTime>("Conforme")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Deadline")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderReceivedId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Schedule")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("OrderDeliveryId");
-
-                    b.HasIndex("OrderReceivedId")
-                        .IsUnique();
-
-                    b.ToTable("OrderDeliveries");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
-                {
-                    b.Property<int>("OrderReceivedId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderReceivedId"));
-
-                    b.Property<DateTime>("DateReceived")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DeliveryDays")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ExtensionLetter")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderReceivedId");
-
-                    b.ToTable("OrderReceived");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.PurchaseOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountingApprovalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountingApprovalId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountingCompleteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CoaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CoaId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("InspectionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("InspectionId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderDeliveryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderDeliveryId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderReceivedId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remark")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RequestRecordNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountingApprovalId")
-                        .IsUnique();
-
-                    b.HasIndex("AccountingApprovalId1");
-
-                    b.HasIndex("AccountingCompleteId");
-
-                    b.HasIndex("CoaId")
-                        .IsUnique();
-
-                    b.HasIndex("CoaId1");
-
-                    b.HasIndex("InspectionId")
-                        .IsUnique();
-
-                    b.HasIndex("InspectionId1");
-
-                    b.HasIndex("OrderDeliveryId")
-                        .IsUnique();
-
-                    b.HasIndex("OrderDeliveryId1");
-
-                    b.HasIndex("OrderReceivedId");
-
-                    b.HasIndex("RequestId")
-                        .IsUnique();
-
-                    b.HasIndex("RequestRecordNumber");
-
-                    b.ToTable("PurchaseOrders");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.RefreshTokenInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RefreshTokenInfos");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Request", b =>
-                {
-                    b.Property<int>("RecordNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecordNumber"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("DateReceived")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Division")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FundSource")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Particulars")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProjectCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RequestNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Requestor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Supplier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RecordNumber");
-
-                    b.ToTable("Requests");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.SystemRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SystemRoles");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.UserRole", b =>
@@ -488,23 +447,11 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BaseLibrary.Entities.AccountingApproval", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("AccountingApprovalId1");
-
-                    b.HasOne("BaseLibrary.Entities.AccountingComplete", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("AccountingCompleteId");
-
                     b.HasOne("BaseLibrary.Entities.Coa", "Coa")
                         .WithOne("PurchaseOrder")
                         .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "CoaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BaseLibrary.Entities.Coa", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("CoaId1");
 
                     b.HasOne("BaseLibrary.Entities.Inspection", "Inspection")
                         .WithOne("PurchaseOrder")
@@ -512,33 +459,17 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BaseLibrary.Entities.Inspection", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("InspectionId1");
-
                     b.HasOne("BaseLibrary.Entities.OrderDelivery", "OrderDelivery")
                         .WithOne("PurchaseOrder")
                         .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "OrderDeliveryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BaseLibrary.Entities.OrderDelivery", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("OrderDeliveryId1");
-
-                    b.HasOne("BaseLibrary.Entities.OrderReceived", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("OrderReceivedId");
-
                     b.HasOne("BaseLibrary.Entities.Request", "Request")
                         .WithOne("PurchaseOrder")
                         .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("BaseLibrary.Entities.Request", null)
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("RequestRecordNumber");
 
                     b.Navigation("AccountingApproval");
 
@@ -554,50 +485,36 @@ namespace ServerLibrary.Data.Migrations
             modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
                 {
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.AccountingComplete", b =>
                 {
                     b.Navigation("AccountingApproval");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
                 {
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
                 {
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
                 {
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
                 {
                     b.Navigation("OrderDelivery");
-
-                    b.Navigation("PurchaseOrders");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Request", b =>
                 {
                     b.Navigation("PurchaseOrder");
-
-                    b.Navigation("PurchaseOrders");
                 });
 #pragma warning restore 612, 618
         }

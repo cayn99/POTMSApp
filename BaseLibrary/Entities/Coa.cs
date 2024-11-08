@@ -9,12 +9,12 @@ namespace BaseLibrary.Entities
 {
 	public class Coa : BaseEntity
 	{
-		[Key]
-		public int CoaId { get; set; }
-		public DateTime OrderCopy { get; set; }
-		public required string ReceivedBy { get; set; }
-		public DateTime InspectionRequest { get; set; }
-		public required string InspectionReceivedBy { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime OrderCopy { get; set; }
+        public required string ReceivedBy { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime InspectionRequest { get; set; }
+        public required string InspectionReceivedBy { get; set; }
 		public PurchaseOrder? PurchaseOrder { get; set; }
 	}
 }

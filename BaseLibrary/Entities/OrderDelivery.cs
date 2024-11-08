@@ -9,11 +9,12 @@ namespace BaseLibrary.Entities
 {
 	public class OrderDelivery : BaseEntity
 	{
-		[Key]
-		public int OrderDeliveryId { get; set; }
-		public DateTime Schedule { get; set; }
-		public DateTime Conforme { get; set; }
-		public DateTime Deadline { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime Schedule { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime Conforme { get; set; }
+        [Required, DataType(DataType.DateTime)]
+        public DateTime Deadline { get; set; }
 		public int OrderReceivedId { get; set; }
 		public OrderReceived? OrderReceived { get; set; }
 		public PurchaseOrder? PurchaseOrder { get; set; }
