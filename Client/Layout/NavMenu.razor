@@ -1,14 +1,14 @@
 ﻿@page "/nav"
 @using Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
-@inject RequestState requestState
+@inject AllState requestState
 
 <AuthorizeView>
     <Authorized>
         <div class="top-row ps-3 navbar navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="">
-                    Welcome,@context.User.Identity!.Name
+                    Welcome, @context.User.Identity!.Name!
                 </a>
                 <button title="Navigation Menu" class="navbar-toggler" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
@@ -30,7 +30,8 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;" href="javascript: void()">
+            <NavLink class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;" href="javascript: 
+            void()">
                 <div class="hstack gap-1">
                     <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                     <span>Administration</span>
@@ -44,7 +45,8 @@
             </a>
         </div>
         <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
-            <NavLink class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" href="javascript: void()">
+            <NavLink class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" href="javascript: 
+            void()">
                 <div class="hstack gap-1">
                     <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                     <span>Purchase Orders</span>
@@ -55,7 +57,8 @@
                     <li style="list-style: none; cursor: pointer" class="cursorStyle">
                         <a class="nav-link p-2" @onclick="RequestClicked">
                             <div class="hstack text-wrap">
-                            <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true" 
+                            style="margin-top: -2rem"></span>
                             <span class="fs-6">Requests</span>
                             </div>
                         </a>
@@ -63,7 +66,8 @@
                     <li style="list-style:none; cursor: pointer" class="cursorStyle">
                         <a class="nav-link p-2">
                             <div class="hstack">
-                                <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                                <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem">
+                                </span>
                                 <span>Deliveries</span>
                             </div>
                         </a>
@@ -71,7 +75,8 @@
                             <li style="list-style: none; cursor: pointer" class="cursorStyle">
                         <a class="nav-link p-2">
                             <div class="hstack">
-                                <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true"style ="margin-top: -2rem"></span>
+                                <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true" 
+                                style ="margin-top: -2rem"></span>
                             <span>Complete Orders</span>
                             </div>
                         </a>

@@ -1,4 +1,5 @@
 using AspNetCore.Swagger.Themes;
+using BaseLibrary.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -46,6 +47,15 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<AccountingApproval>, AccountingApprovalRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<AccountingComplete>, AccountingCompleteRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<Coa>, CoaRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<Inspection>, InspectionRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<OrderDelivery>, OrderDeliveryRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<OrderReceived>, OrderReceivedRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<PurchaseOrder>, PurchaseOrderRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<Request>, RequestRepository>();
+
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowBlazorWasm",

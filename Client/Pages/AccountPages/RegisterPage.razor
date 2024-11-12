@@ -1,51 +1,58 @@
 ﻿@page "/identity/account/register"
-@using Client.Pages.OtherPages
-@using Syncfusion.Blazor.Popups
-@inject SfDialogService DialogService
 @layout AuthenticationLayout
 
 <div class="container">
     <div class="row">
         <EditForm Model="User" OnValidSubmit="HandleRegistration">
             <DataAnnotationsValidator />
-            <div class="card bg-light mx-auto" style="margin-top:7%; border-radius:10px; font-weight:bold; max-width:400px">
+            <div class="card bg-light mx-auto" style="margin-top:7%; border-radius:10px; font-weight:bold; 
+            max-width:400px">
                 <div class="card-header text-center">Fill this form to Register</div>
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
-                        <InputText @bind-Value="User.FullName" class="form-control" placeholder="Given name first (Ex. Juan Dela Cruz)" aria-label="FullName" />
+                        <InputText @bind-Value="User.FullName" class="form-control" 
+                        placeholder="Given name first (Ex. Juan Dela Cruz)" aria-label="FullName" />
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Email</label>
-                        <InputText @bind-Value="User.Email" class="form-control" placeholder="Enter your email" aria-label="Email" />
+                        <InputText @bind-Value="User.Email" class="form-control" 
+                        placeholder="Enter your email" aria-label="Email" />
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Division</label>
-                        <InputText @bind-Value="User.Division" class="form-control" placeholder="Enter your division" aria-label="Division" />
+                        <InputText @bind-Value="User.Division" class="form-control" 
+                        placeholder="Enter your division" aria-label="Division" />
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Position</label>
-                        <InputText @bind-Value="User.Position" class="form-control" placeholder="Enter your position" aria-label="Position" />
+                        <InputText @bind-Value="User.Position" class="form-control" 
+                        placeholder="Enter your position" aria-label="Position" />
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Id Code</label>
-                        <InputText @bind-Value="User.IdCode" class="form-control" placeholder="Enter your employee ID" aria-label="IdCode" />
+                        <InputText @bind-Value="User.IdCode" class="form-control" 
+                        placeholder="Enter your employee ID" aria-label="IdCode" />
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Password</label>
                         <div class="input-group">
-                            <input type="@passwordInputType" @bind="User.Password" class="form-control" placeholder="Enter your password" aria-label="Password" />
+                            <input type="@passwordInputType" @bind="User.Password" class="form-control" 
+                            placeholder="Enter your password" aria-label="Password" />
                             <span class="input-group-text" style="cursor: pointer;" @onclick="TogglePasswordVisibility">
-                                <img src="images/icon/@(isPasswordVisible ? "hidden.png" : "view.png")" alt="Toggle Password Visibility" width="20" />
+                                <img src="images/icon/@(isPasswordVisible ? "hidden.png" : "view.png")" 
+                                alt="Toggle Password Visibility" width="20" />
                             </span>
                         </div>
                     </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Confirm Password</label>
                         <div class="input-group">
-                            <input type="@confirmPasswordInputType" @bind="User.ConfirmPassword" class="form-control" placeholder="Confirm your password" aria-label="ConfirmPassword" />
+                            <input type="@confirmPasswordInputType" @bind="User.ConfirmPassword" class="form-control"
+                                   placeholder="Confirm your password" aria-label="ConfirmPassword" />
                             <span class="input-group-text" style="cursor: pointer;" @onclick="ToggleConfirmPasswordVisibility">
-                                <img src="images/icon/@(isConfirmPasswordVisible ? "hidden.png" : "view.png")" alt="Toggle Confirm Password Visibility" width="20" />
+                                <img src="images/icon/@(isConfirmPasswordVisible ? "hidden.png" : "view.png")"
+                                     alt="Toggle Confirm Password Visibility" width="20" />
                             </span>
                         </div>
                     </div>
@@ -114,7 +121,7 @@
     }
     private async Task DisplayDialog(string content, string title)
     {
-        await DialogService.AlertAsync(content, title);
+        await dialogService.AlertAsync(content, title);
     }
 
     private async Task CheckUserAuthentication()
@@ -125,11 +132,3 @@
             NavManager.NavigateTo("/home/dashboard");
     }
 }
-
-
-    
-
-   
-
-   
-                        

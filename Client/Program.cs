@@ -1,3 +1,4 @@
+using BaseLibrary.Entities;
 using Blazored.LocalStorage;
 using Client;
 using Client.ApplicationStates;
@@ -32,7 +33,19 @@ builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
-builder.Services.AddScoped<RequestState>();
+builder.Services.AddScoped<IGenericServiceInterface<Request>, GenericServiceImplementation<Request>>();
+builder.Services.AddScoped<IGenericServiceInterface<OrderDelivery>, GenericServiceImplementation<OrderDelivery>>();
+builder.Services.AddScoped<IGenericServiceInterface<PurchaseOrder>, GenericServiceImplementation<PurchaseOrder>>();
+builder.Services.AddScoped<IGenericServiceInterface<AccountingApproval>, 
+    GenericServiceImplementation<AccountingApproval>>();
+builder.Services.AddScoped<IGenericServiceInterface<AccountingComplete>, 
+    GenericServiceImplementation<AccountingComplete>>();
+builder.Services.AddScoped<IGenericServiceInterface<Coa>, GenericServiceImplementation<Coa>>();
+builder.Services.AddScoped<IGenericServiceInterface<Inspection>, GenericServiceImplementation<Inspection>>();
+builder.Services.AddScoped<IGenericServiceInterface<OrderReceived>, GenericServiceImplementation<OrderReceived>>();
+
+
+builder.Services.AddScoped<AllState>();
 
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddScoped<SfDialogService>();

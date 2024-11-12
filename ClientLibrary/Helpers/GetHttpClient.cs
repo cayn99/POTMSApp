@@ -19,7 +19,8 @@ namespace ClientLibrary.Helpers
 			var deserializeToken = Serializations.DeserializeJsonString<UserSession>(stringToken);
 			if (deserializeToken == null) 
 				return client;
-			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", deserializeToken.Token);
+			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", 
+				deserializeToken.Token);
 			return client;
 		}
 

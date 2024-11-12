@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 namespace ClientLibrary.Helpers
 {
     public class CustomHttpHandler
-        (GetHttpClient getHttpClient, LocalStorageService localStorageService, IUserAccountService accountService) : DelegatingHandler
+        (GetHttpClient getHttpClient, LocalStorageService localStorageService, IUserAccountService accountService) : 
+        DelegatingHandler
     {
-        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, 
+            CancellationToken cancellationToken)
         {
             bool loginUrl = request.RequestUri!.AbsoluteUri.Contains("login");
             bool registerUrl = request.RequestUri!.AbsoluteUri.Contains("register");
@@ -38,7 +40,8 @@ namespace ClientLibrary.Helpers
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", deserializedToken.Token);
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", 
+                        deserializedToken.Token);
                         return await base.SendAsync(request, cancellationToken);
                 }
                 // call for refresh token
@@ -46,7 +49,8 @@ namespace ClientLibrary.Helpers
                 if (string.IsNullOrEmpty(newJwtToken))
                     return result;
 
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", newJwtToken);
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", 
+                    newJwtToken);
                 return await base.SendAsync(request, cancellationToken);
             }
             return result;

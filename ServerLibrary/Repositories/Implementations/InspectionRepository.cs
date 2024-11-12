@@ -31,6 +31,7 @@ namespace ServerLibrary.Repositories.Implementations
         {
             if (!await CheckName(item.Name!))
                 return new GeneralResponse(false, "Inspection details already added");
+            context.Inspections.Add(item);
             await Commit();
             return Success();
         }

@@ -31,6 +31,7 @@ namespace ServerLibrary.Repositories.Implementations
         {
             if (!await CheckName(item.Name!))
                 return new GeneralResponse(false, "Accounting details already added");
+            context.AccountingComplete.Add(item);
             await Commit();
             return Success();
         }
@@ -50,7 +51,8 @@ namespace ServerLibrary.Repositories.Implementations
         private async Task Commit() => await context.SaveChangesAsync();
         private async Task<bool> CheckName(string name)
         {
-            var item = await context.AccountingComplete.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
+            var item = await context.AccountingComplete.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals
+            (name.ToLower()));
             return item is null;
         }
     }

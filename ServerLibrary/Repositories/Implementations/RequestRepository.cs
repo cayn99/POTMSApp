@@ -31,6 +31,7 @@ namespace ServerLibrary.Repositories.Implementations
         {
             if (!await CheckName(item.Name!))
                 return new GeneralResponse(false, "Request details already added");
+            context.Requests.Add(item);
             await Commit();
             return Success();
         }

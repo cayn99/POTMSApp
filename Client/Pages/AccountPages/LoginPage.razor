@@ -1,26 +1,27 @@
 ﻿@page "/identity/account/login"
-@using Client.Pages.OtherPages
-@using Syncfusion.Blazor.Popups
 @layout AuthenticationLayout
-@inject SfDialogService DialogService
 
 <div class="container">
     <div class="row">
             <EditForm Enhance Model="User" OnValidSubmit="HandleLogin">
                 <DataAnnotationsValidator/>
-                <div class="card bg-light mx-auto" style="margin-top:17%; border-radius:10px; font-weight:bold; max-width:400px">
+                <div class="card bg-light mx-auto" style="margin-top:17%; border-radius:10px; font-weight:bold; 
+                max-width:400px">
                     <div class="card-header text-center">Login</div>
                     <div class="card-body">
                         <div class="form-group mt-3">
                             <label class="form-label" for="email">Email</label>
-                            <InputText id="email" @bind-Value="User.Email" class="form-control" placeholder="Enter your email" aria-label="Email"></InputText>
+                            <InputText id="email" @bind-Value="User.Email" class="form-control" 
+                            placeholder="Enter your email" aria-label="Email"></InputText>
                         </div>
                     <div class="form-group mt-3">
                         <label class="form-label">Password</label>
                         <div class="input-group">
-                            <input type="@passwordInputType" @bind="User.Password" class="form-control" placeholder="Enter your password" aria-label="Password" />
+                            <input type="@passwordInputType" @bind="User.Password" class="form-control" 
+                            placeholder="Enter your password" aria-label="Password" />
                             <span class="input-group-text" style="cursor: pointer;" @onclick="TogglePasswordVisibility">
-                                <img src="images/icon/@(isPasswordVisible ? "hidden.png" : "view.png")" alt="Toggle Password Visibility" width="20" />
+                                <img src="images/icon/@(isPasswordVisible ? "hidden.png" : "view.png")" 
+                                alt="Toggle Password Visibility" width="20" />
                             </span>
                         </div>
                     </div>
@@ -86,7 +87,7 @@
 
     private async Task DisplayDialog(string content, string title)
     {
-        await DialogService.AlertAsync(content, title);
+        await dialogService.AlertAsync(content, title);
     }
 
     private async Task CheckUserAuthentication()

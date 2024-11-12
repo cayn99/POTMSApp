@@ -1,5 +1,7 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using BaseLibrary.Entities
+@using Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -13,7 +15,24 @@
 @using ClientLibrary.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
 @using ClientLibrary.Services.Contracts
+@using Syncfusion.Blazor.Popups
+@using Client.Pages.ContentPages.RequestPages
+@using Client.Pages.OtherPages
 
 @inject AuthenticationStateProvider AuthStateProvider
-@inject IUserAccountService accountService
 @inject NavigationManager NavManager
+
+@inject IUserAccountService accountService
+
+@inject AllState allState
+
+@inject SfDialogService dialogService
+
+@inject IGenericServiceInterface<AccountingApproval> accountingApprovalService
+@inject IGenericServiceInterface<AccountingComplete> accountingCompleteService
+@inject IGenericServiceInterface<Coa> coaService
+@inject IGenericServiceInterface<Inspection> inspectionService
+@inject IGenericServiceInterface<OrderDelivery> orderDeliveryService
+@inject IGenericServiceInterface<OrderReceived> orderReceivedService
+@inject IGenericServiceInterface<PurchaseOrder> purchaseOrderService
+@inject IGenericServiceInterface<Request> requestService
