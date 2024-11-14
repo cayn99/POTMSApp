@@ -23,7 +23,7 @@
 
 
         public bool ShowPurchaseOrder { get; set; }
-        public void PurchaseOrderClicked()
+        public void OrdersClicked()
         {
             ResetAllOrders();
             ShowPurchaseOrder = true;

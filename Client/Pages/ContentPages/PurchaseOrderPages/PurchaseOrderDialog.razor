@@ -1,4 +1,44 @@
-﻿<h3>PurchaseOrderDialog</h3>
+﻿<SfDialog Width="280px" IsModal="true" ShowCloseIcon="true" @bind-bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Purchase Order </Header>
+        <Content>
+            <EditForm Model="PurchaseOrder" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Id</label>
+                            <input @bind="PurchaseOrder.Id" class="form-control" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Remarks</label>
+                            <InputText @bind-Value="PurchaseOrder.Remarks" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select Request</label>
+
+                            @if (PurchaseOrder.Request != null)
+                            {
+                                int selected = PurchaseOrder.Request!.RecordNumber;
+                                <SfDropDownList TValue="int" TItem="Request" Placeholder="@selected.ToString()" DataSource="Requests">
+                                    <DropDownListFieldSettings Value="Id" Text="RecordNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="Request" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="Request" Placeholder="Select Request" DataSource="Requests">
+                                    <DropDownListFieldSettings Value="Id" Text="RecordNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="Request" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+</SfDialog>
 
 @code {
     [Parameter] public PurchaseOrder PurchaseOrder { get; set; } = new();
@@ -7,78 +47,19 @@
 
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
+    private async void Save()
+    {
+        if (string.IsNullOrEmpty(PurchaseOrder.Remarks) || PurchaseOrder.RequestId <= 0)
+            await dialogService.AlertAsync("You need to provide a remark.", "Alert!");
+        else
+            await HandleSaveOperationEvent.InvokeAsync(PurchaseOrder);
+        NavManager.NavigateTo("/home/purchaseorderpage");
+    }
+
     public void OpenDialog()
     {
         IsVisible = true;
-        Request.DateReceived = DateTime.Now;
-        Request.RequestDate = DateTime.Now;
-        Request.OrderDate = DateTime.Now;
         StateHasChanged();
-    }
-
-    async void Save()
-    {
-        // Validate input fields
-        if (Request.RecordNumber == 0)
-        {
-            await dialogService.
-            AlertAsync("You need to provide Request's Record Number.", "Alert!");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(Request.Division))
-        {
-            await dialogService.AlertAsync("Division is required.", "Alert!");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(Request.Division))
-        {
-            await dialogService.AlertAsync("Division is required.", "Alert!");
-            return;
-        }
-        if (string.IsNullOrEmpty(Request.ProjectCode))
-        {
-            await dialogService.AlertAsync("Project Code is required.", "Alert!");
-            return;
-        }
-        if (string.IsNullOrEmpty(Request.FundSource))
-        {
-            await dialogService.AlertAsync("Fund Source is required.", "Alert!");
-            return;
-        }
-        if (Request.RequestNumber == 0)
-        {
-            await dialogService.AlertAsync("Request Number is required.", "Alert!");
-            return;
-        }
-        if (Request.OrderNumber == 0)
-        {
-            await dialogService.AlertAsync("Order Number is required.", "Alert!");
-            return;
-        }
-        if (string.IsNullOrEmpty(Request.Supplier))
-        {
-            await dialogService.AlertAsync("Supplier is required.", "Alert!");
-            return;
-        }
-        if (string.IsNullOrEmpty(Request.Particulars))
-        {
-            await dialogService.AlertAsync("State the Particulars.", "Alert!");
-            return;
-        }
-        if (string.IsNullOrEmpty(Request.Requestor))
-        {
-            await dialogService.AlertAsync("Requestor is required.", "Alert!");
-            return;
-        }
-        if (Request.Amount <= 0)
-        {
-            await dialogService.AlertAsync("Amount must be greater than zero.", "Alert!");
-            return;
-        }
-        await HandleSaveOperationEvent.InvokeAsync(Request); // Triggers the save and calls DisplayMessage
-        NavManager.NavigateTo("/home/requestpage");
     }
 
     public void ChangeTitle(string title)
@@ -86,4 +67,8 @@
         Title = title;
     }
 
+    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, Request> args)
+    {
+        PurchaseOrder.RequestId = args.Value;
+    }
 }

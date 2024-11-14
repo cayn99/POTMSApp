@@ -1,7 +1,7 @@
 ﻿@page "/nav"
 @using Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AllState requestState
+@inject AllState allState
 
 <AuthorizeView>
     <Authorized>
@@ -54,7 +54,7 @@
             </a>
             <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @PurchaseOrderCssStyle">
                 <ul class="list-group">
-                    <li style="list-style: none; cursor: pointer" class="cursorStyle">
+                    <li style="list-style: none; cursor: pointer">
                         <a class="nav-link p-2" @onclick="RequestClicked">
                             <div class="hstack text-wrap">
                             <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true" 
@@ -63,7 +63,7 @@
                             </div>
                         </a>
                     </li>
-                    <li style="list-style:none; cursor: pointer" class="cursorStyle">
+                    <li style="list-style:none; cursor: pointer">
                         <a class="nav-link p-2">
                             <div class="hstack">
                                 <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem">
@@ -72,8 +72,8 @@
                             </div>
                         </a>
                     </li>
-                            <li style="list-style: none; cursor: pointer" class="cursorStyle">
-                        <a class="nav-link p-2">
+                            <li style="list-style: none; cursor: pointer">
+                        <a class="nav-link p-2" @onclick="OrdersClicked">
                             <div class="hstack">
                                 <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true" 
                                 style ="margin-top: -2rem"></span>
@@ -131,6 +131,11 @@
 
     void RequestClicked()
     {
-        requestState.RequestClicked();
+        allState.RequestClicked();
+    }
+
+    void OrdersClicked()
+    {
+        allState.OrdersClicked();
     }
 }
