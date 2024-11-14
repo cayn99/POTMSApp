@@ -73,7 +73,7 @@
                         </a>
                     </li>
                             <li style="list-style: none; cursor: pointer">
-                        <a class="nav-link p-2" @onclick="OrdersClicked">
+                        <a class="nav-link p-2" @onclick="PurchaseOrderClicked">
                             <div class="hstack">
                                 <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true" 
                                 style ="margin-top: -2rem"></span>
@@ -134,8 +134,8 @@
         allState.RequestClicked();
     }
 
-    void OrdersClicked()
+    void PurchaseOrderClicked()
     {
-        allState.OrdersClicked();
+        allState.PurchaseOrderClicked();
     }
 }
