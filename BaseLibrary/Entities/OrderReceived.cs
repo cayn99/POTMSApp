@@ -11,7 +11,7 @@ namespace BaseLibrary.Entities
 	{
         [Required, DataType(DataType.DateTime)]
         public DateTime DateReceived { get; set; }
-		public int DeliveryDays => (DateReceived - OrderDelivery.Schedule).Days;
+        public int DeliveryDays => (DateReceived - OrderDelivery.Schedule).Days;
 		public bool ExtensionLetter { get; set; }
 		public OrderDelivery? OrderDelivery { get; set; }
 	}

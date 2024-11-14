@@ -9,7 +9,6 @@ namespace BaseLibrary.Entities
 {
 	public class PurchaseOrder : BaseEntity
 	{
-		public string? Division { get; set; }
         [Required, DataType(DataType.Text)]
         public string? Remarks { get; set; }
 

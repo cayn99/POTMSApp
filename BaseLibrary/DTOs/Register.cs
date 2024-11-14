@@ -12,7 +12,15 @@ namespace BaseLibrary.DTOs
         [Required]
         [MinLength(5)]
         [MaxLength(100)]
-        public string? FullName { get; set; }
+        public string? FirstName { get; set; }
+        [Required]
+        [MinLength(5)]
+        [MaxLength(100)]
+        public string? MiddleName { get; set; }
+        [Required]
+        [MinLength(5)]
+        [MaxLength(100)]
+        public string? LastName { get; set; }
         [DataType(DataType.Password)]
         [Compare(nameof(Password))]
         [Required]
@@ -23,8 +31,5 @@ namespace BaseLibrary.DTOs
         [Required]
         [MaxLength(100)]
         public string? Position { get; set; }
-        [Required]
-        [MaxLength(5)]
-        public string? IdCode { get; set; }
     }
 }

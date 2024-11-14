@@ -1,0 +1,89 @@
+﻿<h3>PurchaseOrderDialog</h3>
+
+@code {
+    [Parameter] public PurchaseOrder PurchaseOrder { get; set; } = new();
+    [Parameter] public List<Request> Requests { get; set; } = new();
+    [Parameter] public EventCallback<PurchaseOrder> HandleSaveOperationEvent { get; set; }
+
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        Request.DateReceived = DateTime.Now;
+        Request.RequestDate = DateTime.Now;
+        Request.OrderDate = DateTime.Now;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        // Validate input fields
+        if (Request.RecordNumber == 0)
+        {
+            await dialogService.
+            AlertAsync("You need to provide Request's Record Number.", "Alert!");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(Request.Division))
+        {
+            await dialogService.AlertAsync("Division is required.", "Alert!");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(Request.Division))
+        {
+            await dialogService.AlertAsync("Division is required.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.ProjectCode))
+        {
+            await dialogService.AlertAsync("Project Code is required.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.FundSource))
+        {
+            await dialogService.AlertAsync("Fund Source is required.", "Alert!");
+            return;
+        }
+        if (Request.RequestNumber == 0)
+        {
+            await dialogService.AlertAsync("Request Number is required.", "Alert!");
+            return;
+        }
+        if (Request.OrderNumber == 0)
+        {
+            await dialogService.AlertAsync("Order Number is required.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.Supplier))
+        {
+            await dialogService.AlertAsync("Supplier is required.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.Particulars))
+        {
+            await dialogService.AlertAsync("State the Particulars.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.Requestor))
+        {
+            await dialogService.AlertAsync("Requestor is required.", "Alert!");
+            return;
+        }
+        if (Request.Amount <= 0)
+        {
+            await dialogService.AlertAsync("Amount must be greater than zero.", "Alert!");
+            return;
+        }
+        await HandleSaveOperationEvent.InvokeAsync(Request); // Triggers the save and calls DisplayMessage
+        NavManager.NavigateTo("/home/requestpage");
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+
+}

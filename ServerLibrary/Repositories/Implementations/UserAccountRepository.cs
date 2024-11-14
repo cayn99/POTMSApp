@@ -32,11 +32,12 @@ namespace ServerLibrary.Repositories.Implementations
 
 			var applicationUser = await AddToDatabase(new User()
 			{
-				FullName = user.FullName,
-				Email = user.Email,
+				FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
+                LastName = user.LastName,
+                Email = user.Email,
 				Division = user.Division,
 				Position = user.Position,
-				IdCode = user.IdCode,
 				Password = BCrypt.Net.BCrypt.HashPassword(user.Password)
 			});
 
@@ -49,18 +50,18 @@ namespace ServerLibrary.Repositories.Implementations
 				return new GeneralResponse(true, "Admin account created!");
 			}
 
-			var checkUserRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.User));
+			var checkUserRole = await appDbContext.SystemRoles.FirstOrDefaultAsync(_ => _.Name!.Equals(Constants.Staff));
 			SystemRole response = new();
 			if (checkUserRole is null)
 			{
-				response = await AddToDatabase(new SystemRole() { Name = Constants.User });
+				response = await AddToDatabase(new SystemRole() { Name = Constants.Staff });
 				await AddToDatabase(new UserRole() { RoleId = response.Id, UserId = applicationUser.Id });
 			}
 			else
 			{
 				await AddToDatabase(new UserRole() { RoleId = checkUserRole.Id, UserId = applicationUser.Id });
 			}
-			return new GeneralResponse(true, "User account created!");
+			return new GeneralResponse(true, "Staff account created!");
 		}
 
 		public async Task<LoginResponse> SignInAsync(Login user)
@@ -106,7 +107,7 @@ namespace ServerLibrary.Repositories.Implementations
 			var userClaims = new[]
 			{
 				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Name, user.FullName),
+				new Claim(ClaimTypes.Name, user.FirstName),
 				new Claim(ClaimTypes.Email, user.Email),
 				new Claim(ClaimTypes.Role, role!),
 			};
@@ -114,7 +115,7 @@ namespace ServerLibrary.Repositories.Implementations
 				issuer: config.Value.Issuer,
 				audience: config.Value.Audience,
 				claims: userClaims,
-				expires: DateTime.Now.AddMinutes(1),
+				expires: DateTime.Now.AddMinutes(30),
 				signingCredentials: credentials);
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}

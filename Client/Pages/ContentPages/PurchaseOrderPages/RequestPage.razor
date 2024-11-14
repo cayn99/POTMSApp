@@ -1,0 +1,191 @@
+﻿@page "/home/requestpage"
+@implements IDisposable
+@if (allState.ShowRequest)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">Requests</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Add Request </button>
+                    </div>
+                    <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center">#</th>
+                                        <th scope="col" style="text-align: center">Record Number</th>
+                                        <th scope="col" style="text-align: center">Division</th>
+                                        <th scope="col" style="text-align: center">Project Code</th>
+                                        <th scope="col" style="text-align: center">Fund Source</th>
+                                        <th scope="col" style="text-align: center">Date Received</th>
+                                        <th scope="col" style="text-align: center">Request Number</th>
+                                        <th scope="col" style="text-align: center">Request Date</th>
+                                        <th scope="col" style="text-align: center">Order Number</th>
+                                        <th scope="col" style="text-align: center">Order Date</th>
+                                        <th scope="col" style="text-align: center">Supplier</th>
+                                        <th scope="col" style="text-align: center">Particulars</th>
+                                        <th scope="col" style="text-align: center">Requestor</th>
+                                        <th scope="col" style="text-align: center">Amount</th>
+                                        <th scope="col" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Requests is not null)
+                                    {
+                                        int count = 1;
+                                        foreach (var item in Requests)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center">@count</th>
+                                                <td style="text-align: center">@item.RecordNumber</td>
+                                                <td style="text-align: center">@item.Division</td>
+                                                <td style="text-align: center">@item.ProjectCode</td>
+                                                <td style="text-align: center">@item.FundSource</td>
+                                                <td style="text-align: center">@item.DateReceived</td>
+                                                <td style="text-align: center">@item.RequestNumber</td>
+                                                <td style="text-align: center">@item.RequestDate</td>
+                                                <td style="text-align: center">@item.OrderNumber</td>
+                                                <td style="text-align: center">@item.OrderDate</td>
+                                                <td style="text-align: center">@item.Supplier</td>
+                                                <td style="text-align: center">@item.Particulars</td>
+                                                <td style="text-align: center">@item.Requestor</td>
+                                                <td style="text-align: center">@item.Amount</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)">Edit</button>
+                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)">Delete</button>
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4"><div class="alert-info text-center">No Request added yet!</div></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<RequestDialog @ref="requestDialog"
+HandleSaveOperationEvent="HandleSaveOperationEvent"
+Request="Request" />
+@code {
+    RequestDialog? requestDialog;
+    Request Request = new Request
+        {
+            RecordNumber = 0, // Set an appropriate initial value
+            Division = string.Empty,
+            ProjectCode = string.Empty,
+            FundSource = string.Empty,
+            DateReceived = DateTime.Now, // Or some other default date
+            RequestNumber = 0, // Set an appropriate initial value
+            RequestDate = DateTime.Now, // Or some other default date
+            OrderNumber = 0, // Set an appropriate initial value
+            OrderDate = DateTime.Now, // Or some other default date
+            Supplier = string.Empty,
+            Particulars = string.Empty,
+            Requestor = string.Empty,
+            Amount = 0m // Set an appropriate default value for decimal
+        };
+    public string Title { get; set; } = "Add";
+    public List<Request> Requests { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetRequests();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetRequests()
+    {
+        Requests = await requestService.GetAll(Constants.RequestBaseUrl);
+    }
+
+    void OpenDialog()
+    {
+        requestDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(Request request)
+    {
+        bool successCheck = false;
+        if (Request.Id > 0)
+        {
+            var result = await requestService.Update(request, Constants.RequestBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await requestService.Insert(request, Constants.RequestBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            Request Request = new Request
+                {
+                    RecordNumber = 0, // Set an appropriate initial value
+                    Division = string.Empty,
+                    ProjectCode = string.Empty,
+                    FundSource = string.Empty,
+                    DateReceived = DateTime.Now, // Or some other default date
+                    RequestNumber = 0, // Set an appropriate initial value
+                    RequestDate = DateTime.Now, // Or some other default date
+                    OrderNumber = 0, // Set an appropriate initial value
+                    OrderDate = DateTime.Now, // Or some other default date
+                    Supplier = string.Empty,
+                    Particulars = string.Empty,
+                    Requestor = string.Empty,
+                    Amount = 0m // Set an appropriate default value for decimal
+                };
+            await GetRequests();
+            requestDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(Request request)
+    {
+        requestDialog?.ChangeTitle("Update");
+        Request = request;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(Request request)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete record #{request.RecordNumber}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await requestService.DeleteById(request.Id, Constants.RequestBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetRequests();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+}

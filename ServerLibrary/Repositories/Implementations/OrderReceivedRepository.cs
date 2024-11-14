@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(OrderReceived item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Order details already added");
             context.OrderReceived.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,8 @@ namespace ServerLibrary.Repositories.Implementations
             var orderReceived = await context.OrderReceived.FindAsync(item.Id);
             if (orderReceived == null)
                 return NotFound();
-            orderReceived.Name = item.Name;
+            orderReceived.DateReceived = item.DateReceived;
+            orderReceived.ExtensionLetter = item.ExtensionLetter;
             await Commit();
             return Success();
         }
@@ -49,11 +48,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, order details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.OrderReceived.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals
-            (name.ToLower()));
-            return item is null;
-        }
     }
 }

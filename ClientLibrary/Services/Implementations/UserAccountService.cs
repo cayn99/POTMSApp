@@ -29,7 +29,7 @@ namespace ClientLibrary.Services.Implementations
 			if (!result.IsSuccessStatusCode)
 				return new LoginResponse(false, "Error occured");
 			return await result.Content.ReadFromJsonAsync<LoginResponse>()!;
-		}
+		}      
 
 		public async Task<LoginResponse> RefreshTokenAsync(RefreshToken token)
 		{

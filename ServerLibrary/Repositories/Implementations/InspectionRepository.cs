@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(Inspection item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Inspection details already added");
             context.Inspections.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,11 @@ namespace ServerLibrary.Repositories.Implementations
             var inspection = await context.Inspections.FindAsync(item.Id);
             if (inspection == null)
                 return NotFound();
-            inspection.Name = item.Name;
+            inspection.Status = item.Status;
+            inspection.DateInspected = item.DateInspected;
+            inspection.Inspector = item.Inspector;
+            inspection.DateAccepted = item.DateAccepted;
+            inspection.AcceptedBy = item.AcceptedBy;
             await Commit();
             return Success();
         }
@@ -49,10 +51,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, inspection details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.Inspections.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
-            return item is null;
-        }
     }
 }

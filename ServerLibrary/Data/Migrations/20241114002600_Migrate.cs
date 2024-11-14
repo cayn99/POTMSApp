@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServerLibrary.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class Migrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,8 +20,7 @@ namespace ServerLibrary.Data.Migrations
                     Cancelled = table.Column<bool>(type: "bit", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Penalty = table.Column<bool>(type: "bit", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Penalty = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,8 +36,7 @@ namespace ServerLibrary.Data.Migrations
                     OrderCopy = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InspectionRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InspectionReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    InspectionReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,8 +53,7 @@ namespace ServerLibrary.Data.Migrations
                     DateInspected = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Inspector = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateAccepted = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,8 +67,7 @@ namespace ServerLibrary.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExtensionLetter = table.Column<bool>(type: "bit", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ExtensionLetter = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,8 +106,7 @@ namespace ServerLibrary.Data.Migrations
                     Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Particulars = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Requestor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,12 +146,13 @@ namespace ServerLibrary.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Division = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,8 +172,7 @@ namespace ServerLibrary.Data.Migrations
                     SecondPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     ThirdPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     FourthPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    AccountingCompleteId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AccountingCompleteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -199,8 +194,7 @@ namespace ServerLibrary.Data.Migrations
                     Schedule = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Conforme = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderReceivedId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    OrderReceivedId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,14 +213,12 @@ namespace ServerLibrary.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestId = table.Column<int>(type: "int", nullable: false),
                     OrderDeliveryId = table.Column<int>(type: "int", nullable: false),
                     AccountingApprovalId = table.Column<int>(type: "int", nullable: false),
                     InspectionId = table.Column<int>(type: "int", nullable: false),
-                    CoaId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CoaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

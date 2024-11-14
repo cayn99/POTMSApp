@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(AccountingComplete item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Accounting details already added");
             context.AccountingComplete.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,10 @@ namespace ServerLibrary.Repositories.Implementations
             var accountingComplete = await context.AccountingComplete.FindAsync(item.Id);
             if (accountingComplete == null)
                 return NotFound();
-            accountingComplete.Name = item.Name;
+            accountingComplete.Cancelled = item.Cancelled;
+            accountingComplete.Amount = item.Amount;
+            accountingComplete.Balance = item.Balance;
+            accountingComplete.Penalty = item.Penalty;
             await Commit();
             return Success();
         }
@@ -49,11 +50,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, accounting details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.AccountingComplete.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals
-            (name.ToLower()));
-            return item is null;
-        }
     }
 }

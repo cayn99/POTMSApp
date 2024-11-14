@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(Coa item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Coa details already added");
             context.Coa.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,10 @@ namespace ServerLibrary.Repositories.Implementations
             var coa = await context.Coa.FindAsync(item.Id);
             if (coa == null)
                 return NotFound();
-            coa.Name = item.Name;
+            coa.OrderCopy = item.OrderCopy;
+            coa.ReceivedBy = item.ReceivedBy;
+            coa.InspectionRequest = item.InspectionRequest;
+            coa.InspectionReceivedBy = item.InspectionReceivedBy;
             await Commit();
             return Success();
         }
@@ -49,10 +50,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, coa details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.Coa.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
-            return item is null;
-        }
     }
 }

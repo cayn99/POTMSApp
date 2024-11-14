@@ -10,7 +10,7 @@ namespace BaseLibrary.Entities
 {
 	public class Inspection : BaseEntity
 	{
-        [Required]
+		[Required]
         public IStatus Status { get; set; }
         [Required, DataType(DataType.DateTime)]
         public DateTime DateInspected { get; set; }

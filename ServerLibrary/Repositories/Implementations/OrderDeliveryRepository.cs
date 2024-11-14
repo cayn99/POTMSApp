@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(OrderDelivery item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Delivery details already added");
             context.OrderDeliveries.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,9 @@ namespace ServerLibrary.Repositories.Implementations
             var orderDelivery = await context.OrderDeliveries.FindAsync(item.Id);
             if (orderDelivery == null)
                 return NotFound();
-            orderDelivery.Name = item.Name;
+            orderDelivery.Schedule = item.Schedule;
+            orderDelivery.Conforme = item.Conforme;
+            orderDelivery.Deadline = item.Deadline;
             await Commit();
             return Success();
         }
@@ -49,11 +49,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, delivery details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.OrderDeliveries.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals
-            (name.ToLower()));
-            return item is null;
-        }
     }
 }

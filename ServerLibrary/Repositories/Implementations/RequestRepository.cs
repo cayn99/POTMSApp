@@ -29,8 +29,8 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(Request item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Request details already added");
+            if (!await CheckRecordNumberExists(item.RecordNumber)) // Use RecordNumber to check uniqueness
+                return new GeneralResponse(false, "Request with this record number already exists.");
             context.Requests.Add(item);
             await Commit();
             return Success();
@@ -39,9 +39,21 @@ namespace ServerLibrary.Repositories.Implementations
         public async Task<GeneralResponse> Update(Request item)
         {
             var request = await context.Requests.FindAsync(item.Id);
-            if (request == null) 
+            if (request == null)
                 return NotFound();
-            request.Name = item.Name;
+            request.RecordNumber = item.RecordNumber;
+            request.Division = item.Division;
+            request.ProjectCode = item.ProjectCode;
+            request.FundSource = item.FundSource;
+            request.DateReceived = item.DateReceived;
+            request.RequestNumber = item.RequestNumber;
+            request.RequestDate = item.RequestDate;
+            request.OrderNumber = item.OrderNumber;
+            request.OrderDate = item.OrderDate;
+            request.Supplier = item.Supplier;
+            request.Particulars = item.Particulars;
+            request.Requestor = item.Requestor;
+            request.Amount = item.Amount;
             await Commit();
             return Success();
         }
@@ -49,10 +61,10 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, request details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
+        private async Task<bool> CheckRecordNumberExists(int recordNumber)
         {
-            var item = await context.Requests.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals(name.ToLower()));
-            return item is null;
+            var item = await context.Requests.FirstOrDefaultAsync(x => x.RecordNumber == recordNumber);
+            return item is null; // Returns true if no item is found (valid for insertion)
         }
     }
 }

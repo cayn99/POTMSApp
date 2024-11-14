@@ -29,8 +29,6 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(AccountingApproval item)
         {
-            if (!await CheckName(item.Name!))
-                return new GeneralResponse(false, "Approval details already added");
             context.AccountingApprovals.Add(item);
             await Commit();
             return Success();
@@ -41,7 +39,13 @@ namespace ServerLibrary.Repositories.Implementations
             var accountingApproval = await context.AccountingApprovals.FindAsync(item.Id);
             if (accountingApproval == null)
                 return NotFound();
-            accountingApproval.Name = item.Name;
+            accountingApproval.DateReceived = item.DateReceived;
+            accountingApproval.ReceivedBy = item.ReceivedBy;
+            accountingApproval.Status = item.Status;
+            accountingApproval.FirstPayment = item.FirstPayment;
+            accountingApproval.SecondPayment = item.SecondPayment;
+            accountingApproval.ThirdPayment = item.ThirdPayment;
+            accountingApproval.FourthPayment = item.FourthPayment;
             await Commit();
             return Success();
         }
@@ -49,11 +53,5 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, approval details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckName(string name)
-        {
-            var item = await context.AccountingApprovals.FirstOrDefaultAsync(x => x.Name!.ToLower().Equals
-            (name.ToLower()));
-            return item is null;
-        }
     }
 }

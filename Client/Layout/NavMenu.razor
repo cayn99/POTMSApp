@@ -30,13 +30,13 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;" href="javascript: 
-            void()">
+            <a class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;" 
+            href="javascript: void(0)">
                 <div class="hstack gap-1">
                     <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                     <span>Administration</span>
                 </div>
-            </NavLink>
+            </a>
                     <a class="nav-link p-2 text-white" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle">
                 <div class="hstack">
                     <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
@@ -45,13 +45,13 @@
             </a>
         </div>
         <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
-            <NavLink class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" href="javascript: 
-            void()">
+            <a class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" 
+            href="javascript: void(0)">
                 <div class="hstack gap-1">
                     <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                     <span>Purchase Orders</span>
                 </div>
-            </NavLink>
+            </a>
             <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @PurchaseOrderCssStyle">
                 <ul class="list-group">
                     <li style="list-style: none; cursor: pointer" class="cursorStyle">
