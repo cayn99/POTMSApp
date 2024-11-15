@@ -1,0 +1,141 @@
+﻿@implements IDisposable
+@if (allState.ShowOrderDelivery)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">For Delivery</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Input Delivery Details
+                        </button>
+                    </div>
+                    <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center">#</th>
+                                        <th scope="col" style="text-align: center">Delivery Schedule</th>
+                                        <th scope="col" style="text-align: center">Conforme</th>
+                                        <th scope="col" style="text-align: center">Deadline</th>
+                                        <th scope="col" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (OrderDeliveries is not null)
+                                    {
+                                        int count = 1;
+                                        foreach (var item in OrderDeliveries)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center">@count</th>
+                                                <td style="text-align: center">@item.Schedule</td>
+                                                <td style="text-align: center">@item.Conforme</td>
+                                                <td style="text-align: center">@item.Deadline</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4"><div class="alert-info text-center">No delivery details added yet!</div></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<OrderDeliveryDialog @ref="orderDeliveryDialog"
+HandleSaveOperationEvent="HandleSaveOperationEvent"
+OrderDelivery="OrderDelivery" />
+@code {
+    OrderDeliveryDialog? orderDeliveryDialog;
+    OrderDelivery OrderDelivery = new();
+    public string Title { get; set; } = "Add";
+    public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetOrderDeliveries();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetOrderDeliveries()
+    {
+        OrderDeliveries = await orderDeliveryService.GetAll(Constants.OrderDeliveryBaseUrl);
+    }
+
+    void OpenDialog()
+    {
+        orderDeliveryDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(OrderDelivery orderDelivery)
+    {
+        bool successCheck = false;
+        if (OrderDelivery.Id > 0)
+        {
+            var result = await orderDeliveryService.Update(orderDelivery, Constants.OrderDeliveryBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await orderDeliveryService.Insert(orderDelivery, Constants.OrderDeliveryBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            OrderDelivery OrderDelivery = new();
+            await GetOrderDeliveries();
+            orderDeliveryDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(OrderDelivery orderDelivery)
+    {
+        orderDeliveryDialog?.ChangeTitle("Update");
+        OrderDelivery = orderDelivery;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(OrderDelivery orderDelivery)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete delivery details with ID #{OrderDelivery.Id}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await orderDeliveryService.DeleteById(orderDelivery.Id, Constants.OrderDeliveryBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetOrderDeliveries();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+}

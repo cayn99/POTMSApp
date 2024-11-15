@@ -1,0 +1,54 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Delivery Details </Header>
+        <Content>
+            <EditForm Model="OrderDelivery" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Delivery Schedule</label>
+                            <InputDate @bind-Value="OrderDelivery.Schedule" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Conforme</label>
+                            <InputDate @bind-Value="OrderDelivery.Conforme" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <InputDate @bind-Value="OrderDelivery.Deadline" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter]
+    public OrderDelivery OrderDelivery { get; set; } = new();
+    [Parameter] public EventCallback<OrderDelivery> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        OrderDelivery.Schedule = DateTime.Now;
+        OrderDelivery.Conforme = DateTime.Now;
+        OrderDelivery.Deadline = DateTime.Now;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        await HandleSaveOperationEvent.InvokeAsync(OrderDelivery); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+}

@@ -1,5 +1,4 @@
-﻿@page "/home/requestpage"
-@implements IDisposable
+﻿@implements IDisposable
 @if (allState.ShowRequest)
 {
     <div class="container mt-5">
@@ -9,7 +8,7 @@
                     <div class="card-header">
                         <h4 class="float-start">Requests</h4>
                         <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
-                            <i class="bi bi-plus-circle-dotted"></i> Add Request </button>
+                            <i class="bi bi-plus-circle-dotted"></i> Input Request Details </button>
                     </div>
                     <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
                         <div class="card-body">

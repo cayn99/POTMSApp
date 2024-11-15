@@ -12,6 +12,10 @@ namespace BaseLibrary.Entities
 	{
 		[Required]
         public IStatus Status { get; set; }
+        public enum IStatus
+        {
+            Success, Failed
+        }
         [Required, DataType(DataType.DateTime)]
         public DateTime DateInspected { get; set; }
         public required string Inspector { get; set; }
@@ -19,13 +23,5 @@ namespace BaseLibrary.Entities
         public DateTime DateAccepted { get; set; }
         public required string AcceptedBy { get; set; }
 		public PurchaseOrder? PurchaseOrder { get; set; }
-	}
-}
-
-namespace BaseLibrary
-{
-	public enum IStatus
-	{
-		Success, Failed
 	}
 }

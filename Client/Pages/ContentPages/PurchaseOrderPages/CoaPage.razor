@@ -1,0 +1,152 @@
+﻿
+@implements IDisposable
+@if (allState.ShowCoa)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">COA</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Input COA Details
+                        </button>
+                    </div>
+                    <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center">#</th>
+                                        <th scope="col" style="text-align: center">PO Copy Receive Date</th>
+                                        <th scope="col" style="text-align: center">Received By</th>
+                                        <th scope="col" style="text-align: center">Inspection Request Date</th>
+                                        <th scope="col" style="text-align: center">Received By</th>
+                                        <th scope="col" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (AllCoa is not null)
+                                    {
+                                        int count = 1;
+                                        foreach (var item in AllCoa)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center">@count</th>
+                                                <td style="text-align: center">@item.OrderCopy</td>
+                                                <td style="text-align: center">@item.ReceivedBy</td>
+                                                <td style="text-align: center">@item.InspectionRequest</td>
+                                                <td style="text-align: center">@item.InspectionReceivedBy</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4"><div class="alert-info text-center">No COA details added yet!</div></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<CoaDialog @ref="coaDialog"
+               HandleSaveOperationEvent="HandleSaveOperationEvent"
+               Coa="Coa" />
+@code {
+    CoaDialog? coaDialog;
+    Coa Coa = new Coa
+        {
+            ReceivedBy = string.Empty,
+            InspectionReceivedBy = string.Empty
+        };
+    public string Title { get; set; } = "Add";
+    public List<Coa> AllCoa { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetAllCoa();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetAllCoa()
+    {
+        AllCoa = await coaService.GetAll(Constants.CoaBaseUrl);
+    }
+
+    void OpenDialog()
+    {
+        coaDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(Coa coa)
+    {
+        bool successCheck = false;
+        if (Coa.Id > 0)
+        {
+            var result = await coaService.Update(coa, Constants.CoaBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await coaService.Insert(coa, Constants.CoaBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            Coa Coa = new Coa
+                {
+                    ReceivedBy = string.Empty,
+                    InspectionReceivedBy = string.Empty
+                };
+            await GetAllCoa();
+            coaDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(Coa coa)
+    {
+        coaDialog?.ChangeTitle("Update");
+        Coa = coa;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(Coa coa)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete COA ID #{coa.Id}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await coaService.DeleteById(coa.Id, Constants.CoaBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetAllCoa();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+}

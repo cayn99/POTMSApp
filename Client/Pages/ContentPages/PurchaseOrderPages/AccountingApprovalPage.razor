@@ -1,0 +1,155 @@
+﻿@implements IDisposable
+@if (allState.ShowAccountingApproval)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">Budget Approval</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Input Details for Budget Approval 
+                        </button>
+                    </div>
+                    <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center">#</th>
+                                        <th scope="col" style="text-align: center">Request Receive Date</th>
+                                        <th scope="col" style="text-align: center">Received By</th>
+                                        <th scope="col" style="text-align: center">Status</th>
+                                        <th scope="col" style="text-align: center">First Payment</th>
+                                        <th scope="col" style="text-align: center">Second Payment</th>
+                                        <th scope="col" style="text-align: center">Third Payment</th>
+                                        <th scope="col" style="text-align: center">Fourth Payment</th>
+                                        <th scope="col" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (AccountingApprovals is not null)
+                                    {
+                                        int count = 1;
+                                        foreach (var item in AccountingApprovals)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center">@count</th>
+                                                <td style="text-align: center">@item.DateReceived</td>
+                                                <td style="text-align: center">@item.ReceivedBy</td>
+                                                <td style="text-align: center">@item.Status</td>
+                                                <td style="text-align: center">@item.FirstPayment</td>
+                                                <td style="text-align: center">@item.SecondPayment</td>
+                                                <td style="text-align: center">@item.ThirdPayment</td>
+                                                <td style="text-align: center">@item.FourthPayment</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4"><div class="alert-info text-center">No COA details added yet!</div></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<AccountingApprovalDialog @ref="accountingApprovalDialog"
+HandleSaveOperationEvent="HandleSaveOperationEvent"
+AccountingApproval="AccountingApproval" />
+@code {
+    AccountingApprovalDialog? accountingApprovalDialog;
+    AccountingApproval AccountingApproval = new AccountingApproval
+        {
+            ReceivedBy = string.Empty
+        };
+    public string Title { get; set; } = "Add";
+    public List<AccountingApproval> AccountingApprovals { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetAccountingApprovals();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetAccountingApprovals()
+    {
+        AccountingApprovals = await accountingApprovalService.GetAll(Constants.AccountingApprovalBaseUrl);
+    }
+
+    void OpenDialog()
+    {
+        accountingApprovalDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(AccountingApproval accountingApproval)
+    {
+        bool successCheck = false;
+        if (AccountingApproval.Id > 0)
+        {
+            var result = await accountingApprovalService.Update(accountingApproval, Constants.AccountingApprovalBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await accountingApprovalService.Insert(accountingApproval, Constants.AccountingApprovalBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            AccountingApproval AccountingApproval = new AccountingApproval
+                {
+                    ReceivedBy = string.Empty
+                };
+            await GetAccountingApprovals();
+            accountingApprovalDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(AccountingApproval accountingApproval)
+    {
+        accountingApprovalDialog?.ChangeTitle("Update");
+        AccountingApproval = accountingApproval;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(AccountingApproval accountingApproval)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete details with the ID #{AccountingApproval.Id}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await accountingApprovalService.DeleteById(accountingApproval.Id, Constants.AccountingApprovalBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetAccountingApprovals();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+}

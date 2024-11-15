@@ -1,4 +1,4 @@
-﻿<SfDialog Width="280px" IsModal="true" ShowCloseIcon="true" @bind-bind-Visible="IsVisible">
+﻿<SfDialog Width="280px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
     <DialogEvents OnOpen="OpenDialog"></DialogEvents>
     <DialogTemplates>
         <Header> @Title Purchase Order </Header>
@@ -12,7 +12,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Remarks</label>
-                            <InputText @bind-Value="PurchaseOrder.Remarks" class="form-control" />
+                            <InputTextArea @bind-Value="PurchaseOrder.Remarks" class="form-control" />
                         </div>
                         <div class="form-group mt-3 mb-3">
                             <label class="form-label">Select Request</label>
@@ -38,6 +38,9 @@
             </EditForm>
         </Content>
     </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
 </SfDialog>
 
 @code {
@@ -53,7 +56,6 @@
             await dialogService.AlertAsync("You need to provide a remark.", "Alert!");
         else
             await HandleSaveOperationEvent.InvokeAsync(PurchaseOrder);
-        NavManager.NavigateTo("/home/purchaseorderpage");
     }
 
     public void OpenDialog()

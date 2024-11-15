@@ -1,6 +1,4 @@
-﻿
-
-<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
     <DialogEvents OnOpen="OpenDialog"></DialogEvents>
     <DialogTemplates>
         <Header> @Title Request </Header>
@@ -161,7 +159,6 @@
             return;
         }
         await HandleSaveOperationEvent.InvokeAsync(Request); // Triggers the save and calls DisplayMessage
-        NavManager.NavigateTo("/home/requestpage");
     }
 
     public void ChangeTitle(string title)

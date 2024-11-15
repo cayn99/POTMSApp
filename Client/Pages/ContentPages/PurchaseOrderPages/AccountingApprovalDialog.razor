@@ -1,0 +1,86 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Budget Approval Details </Header>
+        <Content>
+            <EditForm Model="AccountingApproval" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Request Receive Date</label>
+                            <InputDate @bind-Value="AccountingApproval.DateReceived" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Received By</label>
+                            <InputText @bind-Value="AccountingApproval.ReceivedBy" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <InputSelect @bind-Value="AccountingApproval.Status" class="form-control">
+                                @foreach (var status in Enum.GetValues(typeof(AccountingApproval.AStatus)))
+                                {
+                                    <option value="@status">@status</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <InputNumber @bind-Value="AccountingApproval.FirstPayment" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <InputNumber @bind-Value="AccountingApproval.SecondPayment" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <InputNumber @bind-Value="AccountingApproval.ThirdPayment" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <InputNumber @bind-Value="AccountingApproval.FourthPayment" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter]
+    public AccountingApproval AccountingApproval { get; set; } = new AccountingApproval
+        {
+            ReceivedBy = string.Empty
+        };
+    [Parameter] public EventCallback<AccountingApproval> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        AccountingApproval.DateReceived = DateTime.Now;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        if (string.IsNullOrEmpty(AccountingApproval.ReceivedBy))
+        {
+            await dialogService.AlertAsync("This field is required.", "Alert!");
+            return;
+        }
+        if (AccountingApproval.FirstPayment <= 0)
+        {
+            await dialogService.AlertAsync("Input must be greater than zero.", "Alert!");
+            return;
+        }
+        await HandleSaveOperationEvent.InvokeAsync(AccountingApproval); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+}

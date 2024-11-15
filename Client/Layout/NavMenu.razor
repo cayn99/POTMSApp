@@ -17,76 +17,101 @@
         </div>
 
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link p-2" href="/home/dashboard">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link p-2" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <a class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;" 
-            href="javascript: void(0)">
-                <div class="hstack gap-1">
-                    <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                    <span>Administration</span>
+        <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+            <nav class="flex-column">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link p-2" href="/home/dashboard">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    </NavLink>
                 </div>
-            </a>
+                <div class="nav-item px-3">
+                    <a class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;"
+                    href="javascript: void(0)">
+                        <div class="hstack gap-1">
+                            <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span>Manage Users</span>
+                        </div>
+                    </a>
                     <a class="nav-link p-2 text-white" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle">
-                <div class="hstack">
-                    <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                    <span>Users</span>
+                        <div class="hstack" @onclick="UserClicked">
+                            <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span>Users</span>
+                        </div>
+                    </a>
                 </div>
-            </a>
-        </div>
-        <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
-            <a class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;" 
-            href="javascript: void(0)">
-                <div class="hstack gap-1">
-                    <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                    <span>Purchase Orders</span>
-                </div>
-            </a>
-            <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @PurchaseOrderCssStyle">
-                <ul class="list-group">
-                    <li style="list-style: none; cursor: pointer">
-                        <a class="nav-link p-2" @onclick="RequestClicked">
-                            <div class="hstack text-wrap">
-                            <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true" 
-                            style="margin-top: -2rem"></span>
-                            <span class="fs-6">Requests</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li style="list-style:none; cursor: pointer">
-                        <a class="nav-link p-2">
-                            <div class="hstack">
-                                <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem">
-                                </span>
-                                <span>Deliveries</span>
-                            </div>
-                        </a>
-                    </li>
+                <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
+                    <a class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;"
+                    href="javascript: void(0)">
+                        <div class="hstack gap-1">
+                            <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span>Purchase Orders</span>
+                        </div>
+                    </a>
+                    <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @PurchaseOrderCssStyle">
+                        <ul class="list-group">
                             <li style="list-style: none; cursor: pointer">
-                        <a class="nav-link p-2" @onclick="PurchaseOrderClicked">
-                            <div class="hstack">
-                                <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true" 
-                                style ="margin-top: -2rem"></span>
-                            <span>Complete Orders</span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                                <a class="nav-link p-2" @onclick="RequestClicked">
+                                    <div class="hstack text-wrap">
+                                        <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true"
+                                        style="margin-top: -2rem"></span>
+                                        <span class="fs-6">Requests</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="AccountingApprovalClicked">
+                                    <div class="hstack">
+                                        <span class="bi bi-calculator fs-5 text-center" aria-hidden="true"
+                                        style="margin-top: -2rem"></span>
+                                        <span>Accounting</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style:none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="OrderDeliveryClicked">
+                                    <div class="hstack">
+                                        <span class="bi bi-truck fs-5 text-center" aria-hidden="true" style="margin-top: -2rem">
+                                        </span>
+                                        <span>Deliveries</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="CoaClicked">
+                                    <div class="hstack">
+                                        <span class="bi bi-journal-check fs-5 text-center" aria-hidden="true"
+                                        style="margin-top: -2rem"></span>
+                                        <span>COA</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="InspectionClicked">
+                                    <div class="hstack">
+                                        <span class="bi bi-search fs-5 text-center" aria-hidden="true"
+                                        style="margin-top: -2rem"></span>
+                                        <span>Inspection</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none">
+                                <hr />
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="PurchaseOrderClicked">
+                                    <div class="hstack">
+                                        <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true"
+                                        style="margin-top: -2rem"></span>
+                                        <span>Complete Orders</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
-</div>
-</Authorized>
+    </Authorized>
 </AuthorizeView>
 
 @code {
@@ -129,13 +154,13 @@
             PurchaseOrderCssStyle = "hidden";
     }
 
-    void RequestClicked()
-    {
-        allState.RequestClicked();
-    }
-
-    void PurchaseOrderClicked()
-    {
-        allState.PurchaseOrderClicked();
-    }
+    void RequestClicked() => allState.RequestClicked();
+    void PurchaseOrderClicked() => allState.PurchaseOrderClicked();
+    void AccountingApprovalClicked() => allState.AccountingApprovalClicked();
+    void AccountingCompleteClicked() => allState.AccountingCompleteClicked();
+    void OrderDeliveryClicked() => allState.OrderDeliveryClicked();
+    void OrderReceivedClicked() => allState.OrderReceivedClicked();
+    void CoaClicked() => allState.CoaClicked();
+    void InspectionClicked() => allState.InspectionClicked();
+    void UserClicked() => allState.UserClicked();
 }

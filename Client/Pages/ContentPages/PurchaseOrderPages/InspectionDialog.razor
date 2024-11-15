@@ -1,0 +1,79 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Inspection Details </Header>
+        <Content>
+            <EditForm Model="Inspection" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <InputSelect @bind-Value="Inspection.Status" class="form-control">
+                                @foreach (var status in Enum.GetValues(typeof(Inspection.IStatus)))
+                                {
+                                    <option value="@status">@status</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Inspection</label>
+                            <InputDate @bind-Value="Inspection.DateInspected" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Inspector</label>
+                            <InputText @bind-Value="Inspection.Inspector" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date Accepted</label>
+                            <InputDate @bind-Value="Inspection.DateAccepted" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Accepted By</label>
+                            <InputText @bind-Value="Inspection.AcceptedBy" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter] public Inspection Inspection { get; set; } = new Inspection
+        {
+            Inspector = string.Empty,
+            AcceptedBy = string.Empty
+        };
+    [Parameter] public EventCallback<Inspection> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        Inspection.DateAccepted = DateTime.Now;
+        Inspection.DateInspected = DateTime.Now;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        if (string.IsNullOrEmpty(Inspection.Inspector))
+        {
+            await dialogService.AlertAsync("This field is required.", "Alert!");
+            return;
+        }
+        if (string.IsNullOrEmpty(Inspection.AcceptedBy))
+        {
+            await dialogService.AlertAsync("This field is required.", "Alert!");
+            return;
+        }
+        await HandleSaveOperationEvent.InvokeAsync(Inspection); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+}

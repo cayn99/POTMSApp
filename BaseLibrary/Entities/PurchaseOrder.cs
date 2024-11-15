@@ -11,8 +11,8 @@ namespace BaseLibrary.Entities
 	{
         [Required, DataType(DataType.Text)]
         public string? Remarks { get; set; }
-
-		public int RequestId { get; set; }
+        [Required, DataType(DataType.Text)]
+        public int RequestId { get; set; }
 		public Request? Request { get; set; }
 		public int OrderDeliveryId { get; set; }
 		public OrderDelivery? OrderDelivery { get; set; }

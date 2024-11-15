@@ -14,7 +14,12 @@ namespace BaseLibrary.Entities
         [Required]
         public required string ReceivedBy { get; set; }
         [Required]
-        public Status Status { get; set; }
+        public AStatus Status { get; set; }
+        public enum AStatus
+        {
+            Paid, Unpaid, FullPayment, PartialPayment
+        }
+
         [Required, DataType(DataType.Currency)]
         public decimal FirstPayment { get; set; } = 0m;
         [DataType(DataType.Currency)]
@@ -28,11 +33,3 @@ namespace BaseLibrary.Entities
 		public PurchaseOrder? PurchaseOrder { get; set; }
 		}
 	}
-
-namespace BaseLibrary
-{
-	public enum Status
-	{
-		Paid, Unpaid, FullPayment, PartialPayment
-	}
-}
