@@ -15,28 +15,28 @@ namespace ServerLibrary.Repositories.Implementations
     {
         public async Task<GeneralResponse> DeleteById(int id)
         {
-            var accountingComplete = await context.AccountingComplete.FindAsync(id);
+            var accountingComplete = await context.AllAccountingComplete.FindAsync(id);
             if (accountingComplete == null)
                 return NotFound();
 
-            context.AccountingComplete.Remove(accountingComplete);
+            context.AllAccountingComplete.Remove(accountingComplete);
             await Commit();
             return Success();
         }
 
-        public async Task<List<AccountingComplete>> GetAll() => await context.AccountingComplete.ToListAsync();
-        public async Task<AccountingComplete> GetById(int id) => await context.AccountingComplete.FindAsync(id);
+        public async Task<List<AccountingComplete>> GetAll() => await context.AllAccountingComplete.ToListAsync();
+        public async Task<AccountingComplete> GetById(int id) => await context.AllAccountingComplete.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(AccountingComplete item)
         {
-            context.AccountingComplete.Add(item);
+            context.AllAccountingComplete.Add(item);
             await Commit();
             return Success();
         }
 
         public async Task<GeneralResponse> Update(AccountingComplete item)
         {
-            var accountingComplete = await context.AccountingComplete.FindAsync(item.Id);
+            var accountingComplete = await context.AllAccountingComplete.FindAsync(item.Id);
             if (accountingComplete == null)
                 return NotFound();
             accountingComplete.Cancelled = item.Cancelled;

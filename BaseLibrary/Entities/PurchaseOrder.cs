@@ -14,10 +14,10 @@ namespace BaseLibrary.Entities
         [Required, DataType(DataType.Text)]
         public int RequestId { get; set; }
 		public Request? Request { get; set; }
-		public int OrderDeliveryId { get; set; }
-		public OrderDelivery? OrderDelivery { get; set; }
-		public int AccountingApprovalId { get; set; }
-		public AccountingApproval? AccountingApproval { get; set; }
+		public int OrderReceivedId { get; set; }
+		public OrderReceived? OrderReceived { get; set; }
+		public int AccountingCompleteId { get; set; }
+		public AccountingComplete? AccountingComplete { get; set; }
 		public int InspectionId { get; set; }
 		public Inspection? Inspection { get; set; }
 		public int CoaId { get; set; }

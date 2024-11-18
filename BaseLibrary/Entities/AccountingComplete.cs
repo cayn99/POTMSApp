@@ -15,6 +15,8 @@ namespace BaseLibrary.Entities
         [Required, DataType(DataType.Currency)]
         public decimal Balance { get; set; } = 0m;
         public bool Penalty { get; set; }
-		public AccountingApproval? AccountingApproval { get; set; }
-	}
+        public int AccountingApprovalId { get; set; }
+        public AccountingApproval? AccountingApproval { get; set; }
+        public PurchaseOrder? PurchaseOrder { get; set; }
+    }
 }

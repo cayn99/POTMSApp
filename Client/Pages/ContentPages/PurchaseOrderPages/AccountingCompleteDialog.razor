@@ -1,0 +1,85 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Delivery Details </Header>
+        <Content>
+            <EditForm Model="AccountingComplete" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Id</label>
+                            <input @bind="AccountingComplete.Id" class="form-control" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cancelled</label>
+                            <InputCheckbox @bind-Value="AccountingComplete.Cancelled" class="form-check-input" />
+                            <label class="form-check-label">Yes</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <InputNumber @bind-Value="AccountingComplete.Amount" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Balance</label>
+                            <InputNumber @bind-Value="AccountingComplete.Balance" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Penalty</label>
+                            <InputCheckbox @bind-Value="AccountingComplete.Penalty" class="form-check-input" />
+                            <label class="form-check-label">Yes</label>
+                        </div>
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select Approval Details</label>
+
+                            @if (AccountingComplete.AccountingApproval != null)
+                            {
+                                int selected = AccountingComplete.AccountingApproval!.Id;
+                                <SfDropDownList TValue="int" TItem="AccountingApproval" Placeholder="@selected.ToString()" DataSource="AccountingApprovals">
+                                    <DropDownListFieldSettings Value="Id" Text="Id"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="AccountingApproval" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="AccountingApproval" Placeholder="Select Approval Details" DataSource="AccountingApprovals">
+                                    <DropDownListFieldSettings Value="Id" Text="Id"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="AccountingApproval" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter] public AccountingComplete AccountingComplete { get; set; } = new();
+    [Parameter] public List<AccountingApproval> AccountingApprovals { get; set; } = new();
+    [Parameter] public EventCallback<AccountingComplete> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        await HandleSaveOperationEvent.InvokeAsync(AccountingComplete); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title)
+    {
+        Title = title;
+    }
+
+    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, AccountingApproval> args)
+    {
+        AccountingComplete.AccountingApprovalId = args.Value;
+    }
+}

@@ -11,11 +11,11 @@ namespace ServerLibrary.Data
 	public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 	{
 		public DbSet<AccountingApproval> AccountingApprovals { get; set; }
-		public DbSet<AccountingComplete> AccountingComplete { get; set; }
-		public DbSet<Coa> Coa { get; set; }
+		public DbSet<AccountingComplete> AllAccountingComplete { get; set; }
+		public DbSet<Coa> AllCoa { get; set; }
 		public DbSet<Inspection> Inspections { get; set; }
 		public DbSet<OrderDelivery> OrderDeliveries { get; set; }
-		public DbSet<OrderReceived> OrderReceived { get; set; }
+		public DbSet<OrderReceived> OrdersReceived { get; set; }
 		public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
 		public DbSet<Request> Requests { get; set; }
 		// Authentication
@@ -28,25 +28,25 @@ namespace ServerLibrary.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<AccountingApproval>()
-		   .HasOne(aa => aa.AccountingComplete)
-		   .WithOne(ac => ac.AccountingApproval)
-		   .HasForeignKey<AccountingApproval>(aa => aa.AccountingCompleteId);
+			modelBuilder.Entity<AccountingComplete>()
+		   .HasOne(ac => ac.AccountingApproval)
+		   .WithOne(aa => aa.AccountingComplete)
+		   .HasForeignKey<AccountingComplete>(ac => ac.AccountingApprovalId);
 
-			modelBuilder.Entity<OrderDelivery>()
-		   .HasOne(od => od.OrderReceived)
-		   .WithOne(or => or.OrderDelivery)
-		   .HasForeignKey<OrderDelivery>(od => od.OrderReceivedId);
-
-			modelBuilder.Entity<PurchaseOrder>()
-			.HasOne(p => p.AccountingApproval)
-			.WithOne(aa => aa.PurchaseOrder)
-			.HasForeignKey<PurchaseOrder>(p => p.AccountingApprovalId);
+			modelBuilder.Entity<OrderReceived>()
+		   .HasOne(or => or.OrderDelivery)
+		   .WithOne(od => od.OrderReceived)
+		   .HasForeignKey<OrderReceived>(or => or.OrderDeliveryId);
 
 			modelBuilder.Entity<PurchaseOrder>()
-		   .HasOne(p => p.OrderDelivery)
-		   .WithOne(od => od.PurchaseOrder)
-		   .HasForeignKey<PurchaseOrder>(p => p.OrderDeliveryId);
+			.HasOne(p => p.AccountingComplete)
+			.WithOne(ac => ac.PurchaseOrder)
+			.HasForeignKey<PurchaseOrder>(p => p.AccountingCompleteId);
+
+			modelBuilder.Entity<PurchaseOrder>()
+		   .HasOne(p => p.OrderReceived)
+		   .WithOne(or => or.PurchaseOrder)
+		   .HasForeignKey<PurchaseOrder>(p => p.OrderReceivedId);
 
 			modelBuilder.Entity<PurchaseOrder>()
 			.HasOne(p => p.Coa)

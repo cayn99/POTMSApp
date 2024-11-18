@@ -1,7 +1,6 @@
 ﻿@page "/nav"
 @using Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
-@inject AllState allState
 
 <AuthorizeView>
     <Authorized>
@@ -16,7 +15,6 @@
             </div>
         </div>
 
-
         <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
             <nav class="flex-column">
                 <div class="nav-item px-3">
@@ -26,7 +24,7 @@
                 </div>
                 <div class="nav-item px-3">
                     <a class="nav-link p-2" @onclick="ShowAdminMenuContainer" style="cursor: pointer;"
-                    href="javascript: void(0)">
+                       href="javascript: void(0)">
                         <div class="hstack gap-1">
                             <span class="bi bi-person-fill fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                             <span>Manage Users</span>
@@ -39,11 +37,97 @@
                         </div>
                     </a>
                 </div>
-                <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
-                    <a class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;"
-                    href="javascript: void(0)">
+                <div class="nav-item px-3" style="margin-top: @RequestMargin">
+                    <a class="nav-link p-2" style="cursor: pointer" @onclick="RequestClicked">
+                        <span class="bi bi-file-earmark-plus fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                        <span>Requests</span>
+                    </a>
+                </div>
+                <div class="nav-item px-3" style="margin-top: @AccountingMargin">
+                    <a class="nav-link p-2" @onclick="ShowAccountingContainer" style="cursor: pointer;"
+                       href="javascript: void(0)">
                         <div class="hstack gap-1">
-                            <span class="bi bi-list-ul fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span class="bi bi-calculator fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span>Accounting</span>
+                        </div>
+                    </a>
+                    <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @AccountingCssStyle">
+                        <ul class="list-group">
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="AccountingApprovalClicked">
+                                    <div class="hstack text-wrap">
+                                        <span class="bi bi-currency-dollar fs-5 text-center" aria-hidden="true"
+                                              style="margin-top: -2rem"></span>
+                                        <span class="fs-6">Approval</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="AccountingCompleteClicked">
+                                    <div class="hstack text-wrap">
+                                        <span class="bi bi-check-all fs-5 text-center" aria-hidden="true"
+                                              style="margin-top: -2rem"></span>
+                                        <span>Approved</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-item px-3" style="margin-top: @DeliveryMargin">
+                    <a class="nav-link p-2" @onclick="ShowDeliveryContainer" style="cursor: pointer;"
+                       href="javascript: void(0)">
+                        <div class="hstack gap-1">
+                            <span class="bi bi-truck fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                            <span>Deliveries</span>
+                        </div>
+                    </a>
+                    <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @DeliveryCssStyle">
+                        <ul class="list-group">
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="OrderDeliveryClicked">
+                                    <div class="hstack text-wrap">
+                                        <span class="bi bi-box-seam-fill fs-5 text-center" aria-hidden="true"
+                                              style="margin-top: -2rem"></span>
+                                        <span class="fs-6">In Transit</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li style="list-style: none; cursor: pointer">
+                                <a class="nav-link p-2" @onclick="OrderReceivedClicked">
+                                    <div class="hstack text-wrap">
+                                        <span class="bi bi-check-circle-fill fs-5 text-center" aria-hidden="true"
+                                              style="margin-top: -2rem"></span>
+                                        <span>Received</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="nav-item px-3" style="margin-top: @CoaMargin">
+                    <a class="nav-link p-2" style="cursor: pointer" @onclick="CoaClicked">
+                        <span class="bi bi-journal-check fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                        <span>COA</span>
+                    </a>
+                </div>
+                <div class="nav-item px-3" style="margin-top: @InspectionMargin">
+                    <a class="nav-link p-2" style="cursor: pointer" @onclick="InspectionClicked">
+                        <span class="bi bi-search fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                        <span>Inspection</span>
+                    </a>
+                </div>
+                <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
+                    <a class="nav-link p-2" style="cursor: pointer" @onclick="PurchaseOrderClicked">
+                        <span class="bi bi-bag-check fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                        <span>Purchase Orders</span>
+                    </a>
+                </div>
+               @*  <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
+                    <a class="nav-link p-2" @onclick="ShowPurchaseOrderContainer" style="cursor: pointer;"
+                       href="javascript: void(0)">
+                        <div class="hstack gap-1">
+                            <span class="bi bi-bag-check fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                             <span>Purchase Orders</span>
                         </div>
                     </a>
@@ -53,7 +137,7 @@
                                 <a class="nav-link p-2" @onclick="RequestClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-file-earmark-plus fs-5 text-center" aria-hidden="true"
-                                        style="margin-top: -2rem"></span>
+                                              style="margin-top: -2rem"></span>
                                         <span class="fs-6">Requests</span>
                                     </div>
                                 </a>
@@ -62,7 +146,7 @@
                                 <a class="nav-link p-2" @onclick="AccountingApprovalClicked">
                                     <div class="hstack">
                                         <span class="bi bi-calculator fs-5 text-center" aria-hidden="true"
-                                        style="margin-top: -2rem"></span>
+                                              style="margin-top: -2rem"></span>
                                         <span>Accounting</span>
                                     </div>
                                 </a>
@@ -80,7 +164,7 @@
                                 <a class="nav-link p-2" @onclick="CoaClicked">
                                     <div class="hstack">
                                         <span class="bi bi-journal-check fs-5 text-center" aria-hidden="true"
-                                        style="margin-top: -2rem"></span>
+                                              style="margin-top: -2rem"></span>
                                         <span>COA</span>
                                     </div>
                                 </a>
@@ -89,7 +173,7 @@
                                 <a class="nav-link p-2" @onclick="InspectionClicked">
                                     <div class="hstack">
                                         <span class="bi bi-search fs-5 text-center" aria-hidden="true"
-                                        style="margin-top: -2rem"></span>
+                                              style="margin-top: -2rem"></span>
                                         <span>Inspection</span>
                                     </div>
                                 </a>
@@ -101,14 +185,14 @@
                                 <a class="nav-link p-2" @onclick="PurchaseOrderClicked">
                                     <div class="hstack">
                                         <span class="bi bi-bag-check fs-5 text-center" aria-hidden="true"
-                                        style="margin-top: -2rem"></span>
+                                              style="margin-top: -2rem"></span>
                                         <span>Complete Orders</span>
                                     </div>
                                 </a>
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> *@
             </nav>
         </div>
     </Authorized>
@@ -124,24 +208,64 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public string PurchaseOrderMargin { get; set; } = "-3.5rem";
+    public string RequestMargin { get; set; } = "-3.5rem";
     private string CssStyle = "hidden";
     public bool ShowHide { get; set; } = false;
-
     private void ShowAdminMenuContainer()
     {
         ShowHide = !ShowHide;
         if (ShowHide)
         {
-            PurchaseOrderMargin = "0";
+            RequestMargin = "0";
             CssStyle = "visible";
         }
         else
         {
-            PurchaseOrderMargin = "-3.5rem";
+            RequestMargin = "-3.5rem";
             CssStyle = "hidden";
         }
     }
+
+    public string AccountingMargin { get; set; } = "0rem";
+
+    public string DeliveryMargin { get; set; } = "-7rem";
+    private string AccountingCssStyle = "hidden";
+    public bool ShowHideAccounting { get; set; } = false;
+    private void ShowAccountingContainer()
+    {
+        ShowHideAccounting = !ShowHideAccounting;
+        if (ShowHideAccounting)
+        {
+            DeliveryMargin = "0";
+            AccountingCssStyle = "visible";
+        }
+        else
+        {
+            DeliveryMargin = "-7rem";
+            AccountingCssStyle = "hidden";
+        }
+    }
+
+    public string CoaMargin { get; set; } = "-7rem";
+    private string DeliveryCssStyle = "hidden";
+    public bool ShowHideDelivery { get; set; } = false;
+    private void ShowDeliveryContainer()
+    {
+        ShowHideDelivery = !ShowHideDelivery;
+        if (ShowHideDelivery)
+        {
+            CoaMargin = "0";
+            DeliveryCssStyle = "visible";
+        }
+        else
+        {
+            CoaMargin = "-7rem";
+            DeliveryCssStyle = "hidden";
+        }
+    }
+
+    public string InspectionMargin { get; set; } = "0rem";
+    public string PurchaseOrderMargin { get; set; } = "0rem";
 
     private string PurchaseOrderCssStyle = "hidden";
     public bool ShowHidePurchaseOrder { get; set; } = false;

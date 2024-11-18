@@ -11,8 +11,11 @@ namespace BaseLibrary.Entities
 	{
         [Required, DataType(DataType.DateTime)]
         public DateTime DateReceived { get; set; }
-        public int DeliveryDays => (DateReceived - OrderDelivery.Schedule).Days;
-		public bool ExtensionLetter { get; set; }
-		public OrderDelivery? OrderDelivery { get; set; }
-	}
+        public int DeliveryDays { get; set; }
+        public string? ExtensionLetterFileName { get; set; }
+        public byte[]? ExtensionLetterContent { get; set; } // Optional: to store the file content
+        public int OrderDeliveryId { get; set; }
+        public OrderDelivery? OrderDelivery { get; set; }
+        public PurchaseOrder? PurchaseOrder { get; set; }
+    }
 }

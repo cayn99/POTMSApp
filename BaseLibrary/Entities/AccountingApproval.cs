@@ -28,8 +28,6 @@ namespace BaseLibrary.Entities
         public decimal? ThirdPayment { get; set; } = 0m;
         [DataType(DataType.Currency)]
         public decimal? FourthPayment { get; set; } = 0m;
-        public int AccountingCompleteId { get; set; }
 		public AccountingComplete? AccountingComplete { get; set; }
-		public PurchaseOrder? PurchaseOrder { get; set; }
 		}
 	}

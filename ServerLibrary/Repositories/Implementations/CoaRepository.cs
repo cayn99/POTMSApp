@@ -15,28 +15,28 @@ namespace ServerLibrary.Repositories.Implementations
     {
         public async Task<GeneralResponse> DeleteById(int id)
         {
-            var coa = await context.Coa.FindAsync(id);
+            var coa = await context.AllCoa.FindAsync(id);
             if (coa == null)
                 return NotFound();
 
-            context.Coa.Remove(coa);
+            context.AllCoa.Remove(coa);
             await Commit();
             return Success();
         }
 
-        public async Task<List<Coa>> GetAll() => await context.Coa.ToListAsync();
-        public async Task<Coa> GetById(int id) => await context.Coa.FindAsync(id);
+        public async Task<List<Coa>> GetAll() => await context.AllCoa.ToListAsync();
+        public async Task<Coa> GetById(int id) => await context.AllCoa.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(Coa item)
         {
-            context.Coa.Add(item);
+            context.AllCoa.Add(item);
             await Commit();
             return Success();
         }
 
         public async Task<GeneralResponse> Update(Coa item)
         {
-            var coa = await context.Coa.FindAsync(item.Id);
+            var coa = await context.AllCoa.FindAsync(item.Id);
             if (coa == null)
                 return NotFound();
             coa.OrderCopy = item.OrderCopy;

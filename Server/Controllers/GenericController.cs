@@ -1,6 +1,7 @@
 ﻿using BaseLibrary.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ServerLibrary.Repositories.Contracts;
 
 namespace Server.Controllers
@@ -13,7 +14,7 @@ namespace Server.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll() => Ok(await genericRepositoryInterface.GetAll());
 
-        [HttpGet("single/{id}")]
+    [HttpGet("single/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             if (id <= 0)

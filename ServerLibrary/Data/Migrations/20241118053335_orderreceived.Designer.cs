@@ -12,8 +12,8 @@ using ServerLibrary.Data;
 namespace ServerLibrary.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241114002600_Migrate")]
-    partial class Migrate
+    [Migration("20241118053335_orderreceived")]
+    partial class orderreceived
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,9 +32,6 @@ namespace ServerLibrary.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountingCompleteId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateReceived")
                         .HasColumnType("datetime2");
@@ -60,9 +57,6 @@ namespace ServerLibrary.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountingCompleteId")
-                        .IsUnique();
-
                     b.ToTable("AccountingApprovals");
                 });
 
@@ -73,6 +67,9 @@ namespace ServerLibrary.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountingApprovalId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -88,7 +85,10 @@ namespace ServerLibrary.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountingComplete");
+                    b.HasIndex("AccountingApprovalId")
+                        .IsUnique();
+
+                    b.ToTable("AllAccountingComplete");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
@@ -115,7 +115,7 @@ namespace ServerLibrary.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Coa");
+                    b.ToTable("AllCoa");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
@@ -162,16 +162,10 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderReceivedId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Schedule")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderReceivedId")
-                        .IsUnique();
 
                     b.ToTable("OrderDeliveries");
                 });
@@ -187,12 +181,24 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<DateTime>("DateReceived")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("ExtensionLetter")
-                        .HasColumnType("bit");
+                    b.Property<int>("DeliveryDays")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("ExtensionLetterContent")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ExtensionLetterFileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderDeliveryId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderReceived");
+                    b.HasIndex("OrderDeliveryId")
+                        .IsUnique();
+
+                    b.ToTable("OrdersReceived");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.PurchaseOrder", b =>
@@ -203,7 +209,7 @@ namespace ServerLibrary.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountingApprovalId")
+                    b.Property<int>("AccountingCompleteId")
                         .HasColumnType("int");
 
                     b.Property<int>("CoaId")
@@ -212,7 +218,7 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<int>("InspectionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderDeliveryId")
+                    b.Property<int>("OrderReceivedId")
                         .HasColumnType("int");
 
                     b.Property<string>("Remarks")
@@ -224,7 +230,7 @@ namespace ServerLibrary.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountingApprovalId")
+                    b.HasIndex("AccountingCompleteId")
                         .IsUnique();
 
                     b.HasIndex("CoaId")
@@ -233,7 +239,7 @@ namespace ServerLibrary.Data.Migrations
                     b.HasIndex("InspectionId")
                         .IsUnique();
 
-                    b.HasIndex("OrderDeliveryId")
+                    b.HasIndex("OrderReceivedId")
                         .IsUnique();
 
                     b.HasIndex("RequestId")
@@ -388,33 +394,33 @@ namespace ServerLibrary.Data.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
+            modelBuilder.Entity("BaseLibrary.Entities.AccountingComplete", b =>
                 {
-                    b.HasOne("BaseLibrary.Entities.AccountingComplete", "AccountingComplete")
-                        .WithOne("AccountingApproval")
-                        .HasForeignKey("BaseLibrary.Entities.AccountingApproval", "AccountingCompleteId")
+                    b.HasOne("BaseLibrary.Entities.AccountingApproval", "AccountingApproval")
+                        .WithOne("AccountingComplete")
+                        .HasForeignKey("BaseLibrary.Entities.AccountingComplete", "AccountingApprovalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AccountingComplete");
+                    b.Navigation("AccountingApproval");
                 });
 
-            modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
+            modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
                 {
-                    b.HasOne("BaseLibrary.Entities.OrderReceived", "OrderReceived")
-                        .WithOne("OrderDelivery")
-                        .HasForeignKey("BaseLibrary.Entities.OrderDelivery", "OrderReceivedId")
+                    b.HasOne("BaseLibrary.Entities.OrderDelivery", "OrderDelivery")
+                        .WithOne("OrderReceived")
+                        .HasForeignKey("BaseLibrary.Entities.OrderReceived", "OrderDeliveryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OrderReceived");
+                    b.Navigation("OrderDelivery");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.PurchaseOrder", b =>
                 {
-                    b.HasOne("BaseLibrary.Entities.AccountingApproval", "AccountingApproval")
+                    b.HasOne("BaseLibrary.Entities.AccountingComplete", "AccountingComplete")
                         .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "AccountingApprovalId")
+                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "AccountingCompleteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -430,9 +436,9 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BaseLibrary.Entities.OrderDelivery", "OrderDelivery")
+                    b.HasOne("BaseLibrary.Entities.OrderReceived", "OrderReceived")
                         .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "OrderDeliveryId")
+                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "OrderReceivedId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -442,25 +448,25 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AccountingApproval");
+                    b.Navigation("AccountingComplete");
 
                     b.Navigation("Coa");
 
                     b.Navigation("Inspection");
 
-                    b.Navigation("OrderDelivery");
+                    b.Navigation("OrderReceived");
 
                     b.Navigation("Request");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
                 {
-                    b.Navigation("PurchaseOrder");
+                    b.Navigation("AccountingComplete");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.AccountingComplete", b =>
                 {
-                    b.Navigation("AccountingApproval");
+                    b.Navigation("PurchaseOrder");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
@@ -475,12 +481,12 @@ namespace ServerLibrary.Data.Migrations
 
             modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
                 {
-                    b.Navigation("PurchaseOrder");
+                    b.Navigation("OrderReceived");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
                 {
-                    b.Navigation("OrderDelivery");
+                    b.Navigation("PurchaseOrder");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.Request", b =>

@@ -15,8 +15,7 @@ namespace BaseLibrary.Entities
         public DateTime Conforme { get; set; }
         [Required, DataType(DataType.DateTime)]
         public DateTime Deadline { get; set; }
-		public int OrderReceivedId { get; set; }
 		public OrderReceived? OrderReceived { get; set; }
-		public PurchaseOrder? PurchaseOrder { get; set; }
+
 	}
 }

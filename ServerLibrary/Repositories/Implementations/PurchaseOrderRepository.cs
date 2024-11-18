@@ -30,8 +30,8 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Insert(PurchaseOrder item)
         {
-            if (!await CheckRecordNumberExists(item.RequestId)) // Use RecordNumber to check uniqueness
-                return new GeneralResponse(false, "Purchase Order with this record number already exists.");
+            if (!await CheckIdExists(item.Id)) // Use RecordNumber to check uniqueness
+                return new GeneralResponse(false, "Purchase Order with this ID already exists.");
             context.PurchaseOrders.Add(item);
             await Commit();
             return Success();
@@ -50,9 +50,9 @@ namespace ServerLibrary.Repositories.Implementations
         private static GeneralResponse NotFound() => new(false, "Sorry, purchase order details not found");
         private static GeneralResponse Success() => new(true, "Process completed!");
         private async Task Commit() => await context.SaveChangesAsync();
-        private async Task<bool> CheckRecordNumberExists(int recordNumber)
+        private async Task<bool> CheckIdExists(int id)
         {
-            var item = await context.Requests.FirstOrDefaultAsync(x => x.RecordNumber == recordNumber);
+            var item = await context.PurchaseOrders.FirstOrDefaultAsync(x => x.Id == id);
             return item is null; // Returns true if no item is found (valid for insertion)
         }
     }

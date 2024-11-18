@@ -1,4 +1,5 @@
-﻿using BaseLibrary.Responses;
+﻿using BaseLibrary.Entities;
+using BaseLibrary.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,5 @@ namespace ClientLibrary.Services.Contracts
         Task<GeneralResponse> Insert(T item, string baseUrl);
         Task<GeneralResponse> Update(T item, string baseUrl);
         Task<GeneralResponse> DeleteById(int id, string baseUrl);
-
     }
 }

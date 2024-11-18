@@ -15,32 +15,32 @@ namespace ServerLibrary.Repositories.Implementations
     {
         public async Task<GeneralResponse> DeleteById(int id)
         {
-            var orderReceived = await context.OrderReceived.FindAsync(id);
+            var orderReceived = await context.OrdersReceived.FindAsync(id);
             if (orderReceived == null)
                 return NotFound();
 
-            context.OrderReceived.Remove(orderReceived);
+            context.OrdersReceived.Remove(orderReceived);
             await Commit();
             return Success();
         }
 
-        public async Task<List<OrderReceived>> GetAll() => await context.OrderReceived.ToListAsync();
-        public async Task<OrderReceived> GetById(int id) => await context.OrderReceived.FindAsync(id);
+        public async Task<List<OrderReceived>> GetAll() => await context.OrdersReceived.ToListAsync();
+        public async Task<OrderReceived> GetById(int id) => await context.OrdersReceived.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(OrderReceived item)
         {
-            context.OrderReceived.Add(item);
+            context.OrdersReceived.Add(item);
             await Commit();
             return Success();
         }
 
         public async Task<GeneralResponse> Update(OrderReceived item)
         {
-            var orderReceived = await context.OrderReceived.FindAsync(item.Id);
+            var orderReceived = await context.OrdersReceived.FindAsync(item.Id);
             if (orderReceived == null)
                 return NotFound();
             orderReceived.DateReceived = item.DateReceived;
-            orderReceived.ExtensionLetter = item.ExtensionLetter;
+            orderReceived.ExtensionLetterFileName = item.ExtensionLetterFileName;
             await Commit();
             return Success();
         }
