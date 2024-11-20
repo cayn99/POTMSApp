@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,12 @@ namespace BaseLibrary.Entities
         public AStatus Status { get; set; }
         public enum AStatus
         {
-            Paid, Unpaid, FullPayment, PartialPayment
+            Paid,
+            Unpaid,
+            [Description("Full Payment")]
+            FullPayment,
+            [Description("Partial Payment")]
+            PartialPayment
         }
 
         [Required, DataType(DataType.Currency)]

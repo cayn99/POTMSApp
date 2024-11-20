@@ -24,7 +24,8 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<OrderReceived>> GetAll() => await context.OrdersReceived.ToListAsync();
+        public async Task<List<OrderReceived>> GetAll() => await context
+            .OrdersReceived.AsNoTracking().Include(od=>od.OrderDelivery).ToListAsync();
         public async Task<OrderReceived> GetById(int id) => await context.OrdersReceived.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(OrderReceived item)
@@ -41,6 +42,8 @@ namespace ServerLibrary.Repositories.Implementations
                 return NotFound();
             orderReceived.DateReceived = item.DateReceived;
             orderReceived.ExtensionLetterFileName = item.ExtensionLetterFileName;
+            orderReceived.DeliveryDays = item.DeliveryDays;
+            orderReceived.OrderDeliveryId = item.OrderDeliveryId;
             await Commit();
             return Success();
         }

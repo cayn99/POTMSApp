@@ -1,0 +1,146 @@
+﻿@page "/users"
+@implements IDisposable
+@if (allState.ShowUser)
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="float-start">Users</h4>
+                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Add User
+                        </button>
+                    </div>
+                    <div class="card-header" style="max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
+                        <div class="card-body">
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center">#</th>
+                                        <th scope="col" style="text-align: center">Id</th>
+                                        <th scope="col" style="text-align: center">First Name</th>
+                                        <th scope="col" style="text-align: center">Middle Name</th>
+                                        <th scope="col" style="text-align: center">Last Name</th>
+                                        <th scope="col" style="text-align: center">Email</th>
+                                        <th scope="col" style="text-align: center">Role</th>
+                                        <th scope="col" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ManageUsers is not null)
+                                    {
+                                        int count = 1;
+                                        foreach (var item in ManageUsers)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center">@count</th>
+                                                <td style="text-align: center">@item.UserId</td>
+                                                <td style="text-align: center">@item.FirstName</td>
+                                                <td style="text-align: center">@item.MiddleName</td>
+                                                <td style="text-align: center">@item.LastName</td>
+                                                <td style="text-align: center">@item.Email</td>
+                                                <td style="text-align: center">@item.Role</td>
+                                                <td style="text-align: center">
+                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                </td>
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4"><div class="alert-info text-center">No user registered yet!</div></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@* <UserDialog @ref="accountingCompleteDialog"
+                          HandleSaveOperationEvent="HandleSaveOperationEvent"
+                          AccountingComplete="AccountingComplete"
+                          AccountingApprovals="AccountingApprovals" /> *@
+@code {
+    UserDialog? userDialog;
+    ManageUser ManageUser = new();
+    public List<ManageUser> ManageUsers { get; set; } = new();
+    public List<SystemRole> SystemRoles { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetUsers();
+        await GetRoles();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetUsers()
+    {
+        ManageUsers = await accountService.GetUsers();
+    }
+
+    private async Task GetRoles()
+    {
+        SystemRoles = await accountService.GetRoles();
+    }
+
+    void OpenDialog()
+    {
+        userDialog?.OpenDialog();
+    }
+
+    private async Task HandleSaveOperationEvent(ManageUser manageUser)
+    {
+        var result = await accountService.UpdateUser(manageUser);
+        bool successCheck = await DisplayMessage(result.Flag, result.Message);
+        if (successCheck)
+        {
+            ManageUser = new();
+            await GetUsers();
+        }
+    }
+
+    private void EditClicked(ManageUser user)
+    {
+        ManageUser = user;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(ManageUser user)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete {user.FirstName} {user.LastName}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await accountService.DeleteUser(user.UserId);
+        var result = await DisplayMessage(response.Flag, response.Message);
+        if (result)
+            await GetUsers();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose()
+    {
+        allState.Action -= StateHasChanged;
+    }
+}

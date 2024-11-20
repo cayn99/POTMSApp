@@ -17,6 +17,7 @@
 @using ClientLibrary.Services.Contracts
 @using Syncfusion.Blazor.Popups
 @using Client.Pages.ContentPages.PurchaseOrderPages
+@using Client.Pages.ContentPages.UserPages
 @using Client.Pages.OtherPages
 @using Syncfusion.Blazor.DropDowns
 
@@ -28,6 +29,8 @@
 @inject AllState allState
 
 @inject SfDialogService dialogService
+
+@* @inject IJSRuntime JSRuntime *@
 
 @inject IGenericServiceInterface<AccountingApproval> accountingApprovalService
 @inject IGenericServiceInterface<AccountingComplete> accountingCompleteService

@@ -54,6 +54,7 @@
     [Parameter] public OrderReceived OrderReceived { get; set; } = new();
     [Parameter] public List<OrderDelivery> OrderDeliveries { get; set; } = new();
     [Parameter] public EventCallback<OrderReceived> HandleSaveOperationEvent { get; set; }
+
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
     public void OpenDialog()
@@ -65,7 +66,11 @@
 
     async void Save()
     {
-        await HandleSaveOperationEvent.InvokeAsync(OrderReceived); // Triggers the save and calls DisplayMessage
+        if (OrderReceived.DeliveryDays == 0)
+            await dialogService.
+            AlertAsync("You need to provide Request's Record Number.", "Alert!");
+        else
+            await HandleSaveOperationEvent.InvokeAsync(OrderReceived);
     }
 
     public void ChangeTitle(string title)
@@ -73,13 +78,23 @@
         Title = title;
     }
 
-    private async Task OnFileSelected(ChangeEventArgs e)
-    {
-        var fileInput = e.Value as InputFileChangeEventArgs; // For InputFile type, ensure to cast proper helper signature.
+   private async Task OnFileSelected(ChangeEventArgs e)
+{
+    var fileInput = e.Value as InputFileChangeEventArgs;
 
-        if (fileInput != null);
-        // await XElement!.
+    if (fileInput != null)
+    {
+        // Example: Handling the selected file asynchronously (such as uploading the file).
+        var file = fileInput.File;
+        
+        // For instance, you might read the file's content (asynchronously).
+        var fileContent = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(fileContent);
+        
+        // Process the fileContent, e.g., uploading, saving, etc.
+        // Example: await yourMethodToProcessFile(fileContent);
     }
+}
 
     public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, OrderDelivery> args)
     {
