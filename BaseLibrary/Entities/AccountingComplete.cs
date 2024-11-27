@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class AccountingComplete : BaseEntity
+	public class AccountingComplete
 	{
+        public int Id { get; set; }
         public bool Cancelled { get; set; }
         [Required, DataType(DataType.Currency)]
         public decimal Amount { get; set; } = 0m;

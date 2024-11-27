@@ -1,8 +1,12 @@
 ﻿<div class="btn-group">
-    <img src="@(ProfileImage == "" ? "../images/profile/iconpfp.jpg" : ProfileImage)" width="60" height="60" 
-    style="border-top-left-radius: 10%; border-bottom-left-radius: 10%" />
-    <button type="button" class="btn btn-none border-0 dropdown-toggle dropdown-toggle-split rounded-btn" 
-    data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white">
+   @*  <img src="@(ProfileImage == "" ? "../images/profile/iconpfp.jpg" : ProfileImage)" width="60" height="60" 
+    style="border-top-left-radius: 10%; border-bottom-left-radius: 10%" /> *@
+    <a href="/identity/account/login" style="padding-bottom: 10px; color: red; text-decoration: underline" @onclick="LogoutClicked">
+                        <i class="bi bi-box-arrow-left" style="padding-right: 10px"></i>
+                        Logout
+                    </a>
+   @*  <button type="button" class="btn btn-none border-0 dropdown-toggle dropdown-toggle-split rounded-btn" 
+    data-bs-toggle="dropdown" aria-expanded="false" style="background-color: black">
         <span class="visually-hidden">Toggle Dropdown</span>
     </button>
     <ul class="dropdown-menu mt-2 border-0">
@@ -20,19 +24,16 @@
                     </ul>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-danger btn-sm fw-bold w-100" @onclick="LogoutClicked">
-                        <i class="bi bi-box-arrow-left"></i>
-                        Logout
-                    </button>
+                    
                 </div>
             </div>
         </li>
-    </ul>
+    </ul> *@
 </div>
 
 @code
 {
-    public string ProfileImage { get; set; } = "";
+    // public string ProfileImage { get; set; } = "";
     async Task LogoutClicked()
     {
         var logoutModel = new UserSession();

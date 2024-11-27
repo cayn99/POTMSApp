@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class Coa : BaseEntity
+	public class Coa
 	{
+        public int Id { get; set; }
         [Required, DataType(DataType.DateTime)]
         public DateTime OrderCopy { get; set; }
         public required string ReceivedBy { get; set; }

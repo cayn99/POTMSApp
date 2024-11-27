@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class AccountingApproval : BaseEntity
+	public class AccountingApproval
 	{
+        public int Id { get; set; }
         [Required, DataType(DataType.DateTime)]
 		public DateTime DateReceived { get; set; }
         [Required]
@@ -18,15 +19,12 @@ namespace BaseLibrary.Entities
         public AStatus Status { get; set; }
         public enum AStatus
         {
-            Paid,
+            PaidFull,
+            PaidPartial,
             Unpaid,
-            [Description("Full Payment")]
-            FullPayment,
-            [Description("Partial Payment")]
-            PartialPayment
         }
 
-        [Required, DataType(DataType.Currency)]
+        [DataType(DataType.Currency)]
         public decimal FirstPayment { get; set; } = 0m;
         [DataType(DataType.Currency)]
 		public decimal? SecondPayment { get; set; } = 0m;

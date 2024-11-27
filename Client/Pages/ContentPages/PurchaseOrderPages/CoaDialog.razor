@@ -49,21 +49,52 @@
         StateHasChanged();
     }
 
-    async void Save()
+    async Task Save()
     {
+        // Validate required fields
         if (string.IsNullOrEmpty(Coa.ReceivedBy))
         {
-            await dialogService.AlertAsync("This field is required.", "Alert!");
+            await dialogService.AlertAsync("Received By is required.", "Alert!");
             return;
         }
 
         if (string.IsNullOrEmpty(Coa.InspectionReceivedBy))
         {
-            await dialogService.AlertAsync("This field is required.", "Alert!");
+            await dialogService.AlertAsync("Inspection Received By is required.", "Alert!");
             return;
         }
-        await HandleSaveOperationEvent.InvokeAsync(Coa); // Triggers the save and calls DisplayMessage
+
+        try
+        {
+            // Invoke the save operation event (calls the parent handler)
+            await HandleSaveOperationEvent.InvokeAsync(Coa);
+
+            // Close the dialog after a successful save
+            await dialogService.AlertAsync("COA details added successfully.", "Success!");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors
+            await dialogService.AlertAsync($"An error occurred: {ex.Message}", "Error");
+        }
     }
+
+
+    // async void Save()
+    // {
+    //     if (string.IsNullOrEmpty(Coa.ReceivedBy))
+    //     {
+    //         await dialogService.AlertAsync("This field is required.", "Alert!");
+    //         return;
+    //     }
+
+    //     if (string.IsNullOrEmpty(Coa.InspectionReceivedBy))
+    //     {
+    //         await dialogService.AlertAsync("This field is required.", "Alert!");
+    //         return;
+    //     }
+    //     await HandleSaveOperationEvent.InvokeAsync(Coa); // Triggers the save and calls DisplayMessage
+    // }
 
     public void ChangeTitle(string title)
     {

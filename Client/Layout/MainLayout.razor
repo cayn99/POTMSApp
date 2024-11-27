@@ -14,12 +14,15 @@
                 <img class="icon-link" src="images/icon/nfrdi.png" alt="nfrdi icon" width="100" height="100" 
                 style="padding-top: 10px; padding-right: 10px">
                <div class="text">
-                <h5 style="color: black; padding-top: 10px">National Fisheries Research and Development Institute</h5>
-                <h2 style="color: black;">Purchase Order Tracking and Management System</h2>
+                <h5 style="color: black">National Fisheries Research and Development Institute</h5>
+                <h2 style="color: black">Purchase Order Tracking and Management System</h2>
                 </div>
             </div>
             <div class="right-side">
-            <ProfileDropDown></ProfileDropDown>
+                <a href="/identity/account/login" style="padding-bottom: 10px; color: red; text-decoration: underline, bold" @onclick="LogoutClicked">
+                    <i class="bi bi-box-arrow-left" style="padding-right: 10px"></i>
+                    Logout
+                </a>
             </div>
         </div>
 
@@ -31,11 +34,19 @@
 <Syncfusion.Blazor.Popups.SfDialogProvider/>
 
 @code{
+    // async Task LogoutClicked()
+    // {
+    //     var logoutModel = new UserSession();
+    //     var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+    //     await customAuthStateProvider.UpdateAuthenticationState(logoutModel);
+    //     NavManager.NavigateTo("/", forceLoad: true);
+    // }
+
     async Task LogoutClicked()
     {
         var logoutModel = new UserSession();
         var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(logoutModel);
-        NavManager.NavigateTo("/", forceLoad: true);
+        NavManager.NavigateTo("/identity/account/login", replace: true, forceLoad: true);
     }
 }

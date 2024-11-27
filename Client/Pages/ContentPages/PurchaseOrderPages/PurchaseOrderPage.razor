@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="float-start">Purchase Orders</h4>
-                        <button class="btn btn-outline-success float-end" @onclick="AddButtonClicked">
+                        <button class="btn btn-success float-end" @onclick="AddButtonClicked">
                             <i class="bi bi-plus-circle-dotted"></i> Input Purchase Order Details </button>
                     </div>
                     <div class="card-header style=max-height: 580px; overflow-x: hidden; overflow-y: scroll;">
@@ -19,12 +19,12 @@
                                     <tr>
                                         <th scope="col" style="text-align: center">#</th>
                                         <th scope="col" style="text-align: center">Id</th>
-                                        <th scope="col" style="text-align: center">Request</th>
-                                        <th scope="col" style="text-align: center">Accounting</th>
-                                        <th scope="col" style="text-align: center">Delivery</th>
-                                        <th scope="col" style="text-align: center">COA</th>
-                                        <th scope="col" style="text-align: center">Inspection</th>
-                                        <th scope="col" style="text-align: center">Remarks</th>
+                                        <th scope="col">Record Number</th>
+@*                                         <th scope="col">Accounting</th>
+                                        <th scope="col">Delivery</th>
+                                        <th scope="col">COA</th>
+                                        <th scope="col">Inspection</th> *@
+                                        <th scope="col">Remarks</th>
                                         <th scope="col" style="text-align: center">Action</th>
                                     </tr>
                                 </thead>
@@ -37,15 +37,16 @@
                                             <tr>
                                                 <th scope="row" style="text-align: center">@count</th>
                                                 <td style="text-align: center">@item.Id</td>
-                                                <td style="text-align: center">@item.Request!.RecordNumber</td>
-                                                <td style="text-align: center">@item.AccountingComplete!.Id</td>
-                                                <td style="text-align: center">@item.OrderReceived!.Id</td>
-                                                <td style="text-align: center">@item.Coa!.Id</td>
-                                                <td style="text-align: center">@item.Inspection!.Id</td>
-                                                <td style="text-align: center">@item.Remarks</td>
+                                                <td>@item.Request!.RecordNumber</td>
+@*                                                 <td>@item.AccountingComplete!.Id</td>
+                                                <td>@item.OrderReceived!.Id</td>
+                                                <td>@item.Coa!.Id</td>
+                                                <td>@item.Inspection!.Id</td> *@
+                                                <td>@item.Remarks</td>
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
-                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                    <button type="button" class="btn btn-primary" style="text-align: center" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-danger" style="text-align: center" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                    <button type="button" class="btn btn-info" @onclick="()=>InfoClicked(item)"><i class="bi bi-info-circle"></i> Info</button>
                                                 </td>
                                             </tr>
                                             count++;
@@ -67,6 +68,10 @@
     </div>
 }
 
+<PurchaseOrderDetailsPage PurchaseOrderDetails="PurchaseOrder"
+                    ShowDetailsPage="ShowDetailsPage"
+                    HandleDetailsPageCloseButtonClicked="HandleDetailsPageCloseButtonClicked" />
+
 <PurchaseOrderDialog @ref="purchaseOrderDialog"
 HandleSaveOperationEvent="HandleSaveOperationEvent"
 PurchaseOrder="PurchaseOrder"
@@ -77,6 +82,7 @@ Requests="Requests"/>
     public string Title { get; set; } = "Add";
     public List<Request> Requests { get; set; } = new();
     public List<PurchaseOrder> PurchaseOrders { get; set; } = new();
+    public bool ShowPurchaseOrderPage { get; set; } = true;
 
     protected async override Task OnInitializedAsync()
     {
@@ -132,6 +138,20 @@ Requests="Requests"/>
         purchaseOrderDialog?.ChangeTitle("Update");
         PurchaseOrder = purchaseOrder;
         OpenDialog();
+    }
+
+    public bool ShowDetailsPage { get; set; } = false;
+    private void InfoClicked(PurchaseOrder purchaseOrder)
+    {
+        PurchaseOrder = purchaseOrder;
+        ShowDetailsPage = true;
+        ShowPurchaseOrderPage = false;
+    }
+
+    void HandleDetailsPageCloseButtonClicked()
+    {
+        ShowDetailsPage = false;
+        ShowPurchaseOrderPage = true;
     }
 
     private async Task DeleteClicked(PurchaseOrder purchaseOrder)

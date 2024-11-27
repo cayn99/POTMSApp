@@ -14,7 +14,14 @@ namespace Server.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll() => Ok(await genericRepositoryInterface.GetAll());
 
-    [HttpGet("single/{id}")]
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<T>>> GetAllQueryable()
+        //{
+        //    var items = await genericRepositoryInterface.GetAll().ToListAsync();
+        //    return Ok(items);
+        //}
+
+        [HttpGet("single/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             if (id <= 0)
@@ -31,7 +38,7 @@ namespace Server.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Add(T model)
+        public async Task<IActionResult> Add([FromBody]T model)
         {
             if (model is null)
                 return BadRequest("Bad request made");

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class PurchaseOrder : BaseEntity
+	public class PurchaseOrder
 	{
+        public int Id { get; set; }
         [Required, DataType(DataType.Text)]
         public string? Remarks { get; set; }
         [Required, DataType(DataType.Text)]

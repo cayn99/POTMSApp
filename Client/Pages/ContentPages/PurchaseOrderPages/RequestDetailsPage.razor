@@ -1,0 +1,80 @@
+﻿@if (ShowDetailsPage)
+{
+    <SfDialog Width="1000px" IsModal="true" @bind-Visible="ShowDetailsPage">
+                <div class="card border-success shadow-lg">
+                    <div class="card-header">Record #@RequestDetails.RecordNumber Details</div>
+                    <div class="card-body">
+                        <div class="hstack gap-2">
+                            <div class="vstack gap-3">
+                                <table class="table border-danger">
+                                    <tbody>
+                                        <tr>
+                                            <td><h6 class="fw-bold-bold">Record Number:</h6></td>
+                                            <td> @RequestDetails.RecordNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Division:</h6></td>
+                                            <td> @RequestDetails.Division</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Project Code:</h6></td>
+                                            <td> @RequestDetails.ProjectCode</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Source of Fund:</h6></td>
+                                            <td> @RequestDetails.FundSource</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Date Received:</h6></td>
+                                            <td> @RequestDetails.DateReceived</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Purchase Request Number:</h6></td>
+                                            <td> @RequestDetails.RequestNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Purchase Request Date:</h6></td>
+                                            <td> @RequestDetails.RequestDate</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Puchase Order Number:</h6></td>
+                                            <td> @RequestDetails.OrderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Purchase Order Date:</h6></td>
+                                            <td> @RequestDetails.OrderDate</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Supplier:</h6></td>
+                                            <td> @RequestDetails.Supplier</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Particulars:</h6></td>
+                                            <td> @RequestDetails.Particulars</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Requestor:</h6></td>
+                                            <td> @RequestDetails.Requestor</td>
+                                        </tr>
+                                        <tr>
+                                            <td><h6 class="fw-bold">Amount:</h6></td>
+                                            <td> @RequestDetails.Amount</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-danger" @onclick="DetailsPageCloseButtonClicked">Close</button>
+                        </div>
+                    </div>
+                </div>
+    </SfDialog>
+}
+@code {
+    [Parameter] public bool ShowDetailsPage { get; set; }
+    [Parameter] public Request RequestDetails { get; set; } = new();
+    [Parameter] public EventCallback HandleDetailsPageCloseButtonClicked { get; set; } = new();
+
+    async Task DetailsPageCloseButtonClicked() => await HandleDetailsPageCloseButtonClicked.InvokeAsync();
+}

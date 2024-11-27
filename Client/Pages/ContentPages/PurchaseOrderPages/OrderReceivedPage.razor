@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="float-start">Received Deliveries</h4>
-                        <button class="btn btn-outline-success float-end" @onclick="OpenDialog">
+                        <button class="btn btn-success float-end" @onclick="OpenDialog">
                             <i class="bi bi-plus-circle-dotted"></i> Input Delivery Details
                         </button>
                     </div>
@@ -19,9 +19,9 @@
                                 <thead>
                                     <tr>
                                         <th scope="col" style="text-align: center">#</th>
-                                        <th scope="col" style="text-align: center">Date Received</th>
-                                        <th scope="col" style="text-align: center">Delivery Days</th>
-                                        <th scope="col" style="text-align: center">Extension Letter</th>
+                                        <th scope="col">Date Received</th>
+                                        <th scope="col">Delivery Days</th>
+                                        <th scope="col">Extension Letter</th>
                                         <th scope="col" style="text-align: center">Action</th>
                                     </tr>
                                 </thead>
@@ -33,13 +33,13 @@
                                         {
                                             <tr>
                                                 <th scope="row" style="text-align: center">@count</th>
-                                                <td style="text-align: center">@item.DateReceived</td>
-                                                <td style="text-align: center">@item.DeliveryDays</td>
-                                                <td style="text-align: center">@item.ExtensionLetterFileName</td>
-                                                <td style="text-align: center">@item.OrderDelivery!.Id</td>
+                                                <td>@item.DateReceived</td>
+                                                <td>@item.DeliveryDays</td>
+                                                <td>@item.ExtensionLetterFileName</td>
+                                                <td>@item.OrderDelivery!.Id</td>
                                                 <td style="text-align: center">
-                                                    <button type="button" class="btn btn-outline-info" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
-                                                    <button type="button" class="btn btn-outline-danger" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
+                                                    <button type="button" class="btn btn-primary" style="text-align: center" @onclick="()=>EditClicked(item)"><i class="bi bi-pencil"></i> Edit </button>
+                                                    <button type="button" class="btn btn-danger" style="text-align: center" @onclick="()=>DeleteClicked(item)"><i class="bi bi-trash"></i> Delete </button>
                                                 </td>
                                             </tr>
                                             count++;

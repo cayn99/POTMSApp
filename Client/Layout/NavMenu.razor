@@ -4,7 +4,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <div class="top-row ps-3 navbar navbar-light">
+        <div class="top-row ps-3 navbar navbar-light" style="padding-top: 59px; padding-bottom: 59px">
             <div class="container-fluid">
                 <a class="navbar-brand" href="">
                     Welcome, @CapitalizeName(context.User.Identity!.Name)!
@@ -29,8 +29,8 @@
                             <span>Manage Users</span>
                         </div>
                     </NavLink>
-                    <a class="nav-link p-2 text-white" href="/users">
-                        <div class="hstack" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle" @onclick="UserClicked">
+                    <a class="nav-link p-2 text-white" href="/users" @onclick="UserClicked">
+                        <div class="hstack" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle">
                             <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                             <span>Users</span>
                         </div>

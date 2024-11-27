@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class OrderReceived : BaseEntity
+	public class OrderReceived
 	{
+        public int Id { get; set; }
         [Required, DataType(DataType.DateTime)]
         public DateTime DateReceived { get; set; }
         public int DeliveryDays { get; set; }

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class Request : BaseEntity
+	public class Request
 	{
+        public int Id { get; set; }
         [Required]
 		public int RecordNumber { get; set; }
         [Required]

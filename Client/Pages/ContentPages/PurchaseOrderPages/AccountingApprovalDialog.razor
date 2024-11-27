@@ -17,27 +17,31 @@
                         <div class="form-group">
                             <label class="form-label">Status</label>
                             <InputSelect @bind-Value="AccountingApproval.Status" class="form-control">
-                                @foreach (var status in Enum.GetValues(typeof(AccountingApproval.AStatus)))
+                                @foreach (var status in Enum.GetValues(typeof(BaseLibrary.Entities.AccountingApproval.AStatus)))
                                 {
-                                    <option value="@status">@status</option>
+                                    <option value="@status">@GetStatusDisplayName((BaseLibrary.Entities.AccountingApproval.AStatus)status)</option>
                                 }
                             </InputSelect>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <InputNumber @bind-Value="AccountingApproval.FirstPayment" class="form-control" />
+                            <label class="form-label">First Payment</label>
+                            <InputNumber @bind-Value="AccountingApproval.FirstPayment" class="form-control"
+                                         @oninput="EnableSecondPayment" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <InputNumber @bind-Value="AccountingApproval.SecondPayment" class="form-control" />
+                            <label class="form-label">Second Payment</label>
+                            <InputNumber @bind-Value="AccountingApproval.SecondPayment" class="form-control"
+                                         @oninput="EnableThirdPayment" disabled="@(!IsSecondPaymentEnabled)" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <InputNumber @bind-Value="AccountingApproval.ThirdPayment" class="form-control" />
+                            <label class="form-label">Third Payment</label>
+                            <InputNumber @bind-Value="AccountingApproval.ThirdPayment" class="form-control"
+                                         @oninput="EnableFourthPayment" disabled="@(!IsThirdPaymentEnabled)" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Amount</label>
-                            <InputNumber @bind-Value="AccountingApproval.FourthPayment" class="form-control" />
+                            <label class="form-label">Fourth Payment</label>
+                            <InputNumber @bind-Value="AccountingApproval.FourthPayment" class="form-control"
+                                         disabled="@(!IsFourthPaymentEnabled)" />
                         </div>
                     </div>
                 </div>
@@ -57,11 +61,114 @@
     [Parameter] public EventCallback<AccountingApproval> HandleSaveOperationEvent { get; set; }
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
+
+    // Properties to manage enabled/disabled states
+    private bool IsFirstPaymentEnabled { get; set; } = false;
+    private bool IsSecondPaymentEnabled { get; set; } = false;
+    private bool IsThirdPaymentEnabled { get; set; } = false;
+    private bool IsFourthPaymentEnabled { get; set; } = false;
+
     public void OpenDialog()
     {
         IsVisible = true;
         AccountingApproval.DateReceived = DateTime.Now;
+
+        // Reset all states
+        IsFirstPaymentEnabled = false;
+        IsSecondPaymentEnabled = false;
+        IsThirdPaymentEnabled = false;
+        IsFourthPaymentEnabled = false;
+
+        // Reset the values of the payments
+        AccountingApproval.FirstPayment = 0;
+        AccountingApproval.SecondPayment = 0;
+        AccountingApproval.ThirdPayment = 0;
+        AccountingApproval.FourthPayment = 0;
+
         StateHasChanged();
+    }
+
+    // Event handler to enable second payment when the first payment is greater than 0
+    private void EnableSecondPayment(ChangeEventArgs e)
+    {
+        var value = Convert.ToDecimal(e.Value);
+        AccountingApproval.FirstPayment = value;
+
+        // If FirstPayment is cleared, reset all fields to zero and disable them
+        if (value == 0)
+        {
+            AccountingApproval.SecondPayment = 0;
+            AccountingApproval.ThirdPayment = 0;
+            AccountingApproval.FourthPayment = 0;
+
+            IsSecondPaymentEnabled = false;
+            IsThirdPaymentEnabled = false;
+            IsFourthPaymentEnabled = false;
+        }
+        else
+        {
+            IsSecondPaymentEnabled = true;
+        }
+
+        StateHasChanged();
+    }
+
+    // Event handler to enable third payment when the second payment is greater than 0
+    private void EnableThirdPayment(ChangeEventArgs e)
+    {
+        var value = Convert.ToDecimal(e.Value);
+        AccountingApproval.SecondPayment = value;
+
+        // If SecondPayment is cleared, reset all fields to zero and disable them
+        if (value == 0)
+        {
+            AccountingApproval.ThirdPayment = 0;
+            AccountingApproval.FourthPayment = 0;
+
+            IsThirdPaymentEnabled = false;
+            IsFourthPaymentEnabled = false;
+        }
+        else
+        {
+            IsThirdPaymentEnabled = true;
+        }
+
+        StateHasChanged();
+    }
+
+    // Event handler to enable fourth payment when the third payment is greater than 0
+    private void EnableFourthPayment(ChangeEventArgs e)
+    {
+        var value = Convert.ToDecimal(e.Value);
+        AccountingApproval.ThirdPayment = value;
+
+        // If ThirdPayment is cleared, reset the FourthPayment to zero and disable it
+        if (value == 0)
+        {
+            AccountingApproval.FourthPayment = 0;
+            IsFourthPaymentEnabled = false;
+        }
+        else
+        {
+            IsFourthPaymentEnabled = true;
+        }
+
+        StateHasChanged();
+    }
+
+    private string GetStatusDisplayName(BaseLibrary.Entities.AccountingApproval.AStatus status)
+    {
+        switch (status)
+        {
+            case BaseLibrary.Entities.AccountingApproval.AStatus.PaidFull:
+                return "Paid (Full Payment)";
+            case BaseLibrary.Entities.AccountingApproval.AStatus.PaidPartial:
+                return "Paid (Partial Payment)";
+            case BaseLibrary.Entities.AccountingApproval.AStatus.Unpaid:
+                return "Unpaid";
+            default:
+                return status.ToString();
+        }
     }
 
     async void Save()
@@ -69,11 +176,6 @@
         if (string.IsNullOrEmpty(AccountingApproval.ReceivedBy))
         {
             await dialogService.AlertAsync("This field is required.", "Alert!");
-            return;
-        }
-        if (AccountingApproval.FirstPayment <= 0)
-        {
-            await dialogService.AlertAsync("Input must be greater than zero.", "Alert!");
             return;
         }
         await HandleSaveOperationEvent.InvokeAsync(AccountingApproval); // Triggers the save and calls DisplayMessage

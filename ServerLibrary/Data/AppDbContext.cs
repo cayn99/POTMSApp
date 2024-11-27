@@ -28,39 +28,39 @@ namespace ServerLibrary.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<AccountingComplete>()
-		   .HasOne(ac => ac.AccountingApproval)
-		   .WithOne(aa => aa.AccountingComplete)
+			modelBuilder.Entity<AccountingApproval>()
+		   .HasOne(aa => aa.AccountingComplete)
+		   .WithOne(ac => ac.AccountingApproval)
 		   .HasForeignKey<AccountingComplete>(ac => ac.AccountingApprovalId);
 
-			modelBuilder.Entity<OrderReceived>()
-		   .HasOne(or => or.OrderDelivery)
-		   .WithOne(od => od.OrderReceived)
+			modelBuilder.Entity<OrderDelivery>()
+		   .HasOne(od => od.OrderReceived)
+		   .WithOne(or => or.OrderDelivery)
 		   .HasForeignKey<OrderReceived>(or => or.OrderDeliveryId);
 
-			modelBuilder.Entity<PurchaseOrder>()
-			.HasOne(p => p.AccountingComplete)
-			.WithOne(ac => ac.PurchaseOrder)
+			modelBuilder.Entity<AccountingComplete>()
+			.HasOne(ac => ac.PurchaseOrder)
+			.WithOne(p => p.AccountingComplete)
 			.HasForeignKey<PurchaseOrder>(p => p.AccountingCompleteId);
 
-			modelBuilder.Entity<PurchaseOrder>()
-		   .HasOne(p => p.OrderReceived)
-		   .WithOne(or => or.PurchaseOrder)
+			modelBuilder.Entity<OrderReceived>()
+		   .HasOne(or => or.PurchaseOrder)
+		   .WithOne(p => p.OrderReceived)
 		   .HasForeignKey<PurchaseOrder>(p => p.OrderReceivedId);
 
-			modelBuilder.Entity<PurchaseOrder>()
-			.HasOne(p => p.Coa)
-			.WithOne(c => c.PurchaseOrder)
+			modelBuilder.Entity<Coa>()
+			.HasOne(c => c.PurchaseOrder)
+			.WithOne(p => p.Coa)
 			.HasForeignKey<PurchaseOrder>(p => p.CoaId);
 
-			modelBuilder.Entity<PurchaseOrder>()
-			.HasOne(p => p.Inspection)
-			.WithOne(i => i.PurchaseOrder)
+			modelBuilder.Entity<Inspection>()
+			.HasOne(i => i.PurchaseOrder)
+			.WithOne(p => p.Inspection)
 			.HasForeignKey<PurchaseOrder>(p => p.InspectionId);
 
-			modelBuilder.Entity<PurchaseOrder>()
-		   .HasOne(p => p.Request)
-		   .WithOne(r => r.PurchaseOrder)
+			modelBuilder.Entity<Request>()
+		   .HasOne(r => r.PurchaseOrder)
+		   .WithOne(p => p.Request)
 		   .HasForeignKey<PurchaseOrder>(p => p.RequestId);
 		}
 	}

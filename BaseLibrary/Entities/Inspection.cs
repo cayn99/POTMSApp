@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
 {
-	public class Inspection : BaseEntity
+	public class Inspection
 	{
-		[Required]
+        public int Id { get; set; }
+        [Required]
         public IStatus Status { get; set; }
         public enum IStatus
         {

@@ -4,14 +4,22 @@
         <Header> @Title Delivery Details </Header>
         <Content>
             <EditForm Model="OrderReceived" Enhance OnSubmit="Save">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
                 <div class="card border-success">
                     <div class="card-body">
+                        @* <div>
+                            <label>Select Order Delivery:</label>
+                            <select @bind="selectedOrderDeliveryId">
+                                <option value="Schedule">-- Select Delivered Order --</option>
+                                @foreach (var order in OrderDeliveries)
+                                {
+                                    <option value="@order.Id">@order.Schedule.ToShortDateString()</option>
+                                }
+                            </select>
+                        </div> *@
                         <div class="form-group">
-                            <label class="form-label">Id</label>
-                            <input @bind="OrderReceived.Id" class="form-control" disabled />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Date Received</label>
+                            <label class="form-label">Received Date:</label>
                             <InputDate @bind-Value="OrderReceived.DateReceived" class="form-control" />
                         </div>
                         <div class="form-group">
@@ -22,7 +30,7 @@
                             <label class="form-label">Extension Letter</label>
                             <input type="file" @onchange="async e => await OnFileSelected(e)" class="form-control" />
                         </div>
-                        <div class="form-group mt-3 mb-3">
+                       @*  <div class="form-group mt-3 mb-3">
                             <label class="form-label">Select Delivery Details</label>
 
                             @if (OrderReceived.OrderDelivery != null)
@@ -40,7 +48,7 @@
                                     <DropDownListEvents TValue="int" TItem="OrderDelivery" ValueChange="OnValueChange"></DropDownListEvents>
                                 </SfDropDownList>
                             }
-                        </div>
+                        </div> *@
                     </div>
                 </div>
             </EditForm>
@@ -52,11 +60,23 @@
 </SfDialog>
 @code {
     [Parameter] public OrderReceived OrderReceived { get; set; } = new();
-    [Parameter] public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+    [Parameter] public List<OrderDelivery> OrderDeliveries { get; set; } = new List<OrderDelivery>();
     [Parameter] public EventCallback<OrderReceived> HandleSaveOperationEvent { get; set; }
+    private int selectedOrderDeliveryId;
 
+    private byte[]? extensionLetterContent;
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     // Fetch the latest OrderDelivery records, sorted by Schedule (or Id)
+    //     OrderDeliveries = await Http.GetFromJsonAsync<List<OrderDelivery>>("api/orderdelivery/latest");
+
+    //     // Initialize OrderReceived fields
+    //     OrderReceived.DateReceived = DateTime.Now;
+    // }
+
     public void OpenDialog()
     {
         IsVisible = true;
@@ -66,10 +86,25 @@
 
     async void Save()
     {
-        if (OrderReceived.DeliveryDays == 0)
-            await dialogService.
-            AlertAsync("You need to provide Request's Record Number.", "Alert!");
-        else
+        // Get the selected OrderDelivery object based on the selected ID
+        // var selectedOrderDelivery = OrderDeliveries.FirstOrDefault(od => od.Id == selectedOrderDeliveryId);
+
+        // if (selectedOrderDelivery != null)
+        // {
+        //     // Populate the OrderReceived entity with data from the selected OrderDelivery
+        //     OrderReceived.OrderDeliveryId = selectedOrderDelivery.Id;
+        //     OrderReceived.Schedule = selectedOrderDelivery.Schedule;
+        //     OrderReceived.Conforme = selectedOrderDelivery.Conforme;
+        //     OrderReceived.Deadline = selectedOrderDelivery.Deadline;
+
+        //     // Save the OrderReceived data
+        //     var response = await Http.PostAsJsonAsync("api/orderreceived", OrderReceived);
+        //     if (response.IsSuccessStatusCode)
+        //     {
+        //         // Optionally, show a success message or navigate to another page
+        //         NavManager.NavigateTo("/deliveries/orderreceived"); // Example: Redirect to a success page
+        //     }
+        // }
             await HandleSaveOperationEvent.InvokeAsync(OrderReceived);
     }
 
@@ -79,22 +114,22 @@
     }
 
    private async Task OnFileSelected(ChangeEventArgs e)
-{
-    var fileInput = e.Value as InputFileChangeEventArgs;
-
-    if (fileInput != null)
     {
-        // Example: Handling the selected file asynchronously (such as uploading the file).
-        var file = fileInput.File;
+        var fileInput = e.Value as InputFileChangeEventArgs;
+
+        if (fileInput != null)
+        {
+            // Example: Handling the selected file asynchronously (such as uploading the file).
+            var file = fileInput.File;
         
-        // For instance, you might read the file's content (asynchronously).
-        var fileContent = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(fileContent);
+            // For instance, you might read the file's content (asynchronously).
+            var fileContent = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(fileContent);
         
-        // Process the fileContent, e.g., uploading, saving, etc.
-        // Example: await yourMethodToProcessFile(fileContent);
+            // Process the fileContent, e.g., uploading, saving, etc.
+            // Example: await yourMethodToProcessFile(fileContent);
+        }
     }
-}
 
     public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, OrderDelivery> args)
     {

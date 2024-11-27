@@ -10,6 +10,7 @@
 @using Microsoft.JSInterop
 @using Client
 @using Client.Layout
+@using System.Linq
 
 @using BaseLibrary.DTOs
 @using ClientLibrary.Helpers
@@ -20,9 +21,11 @@
 @using Client.Pages.ContentPages.UserPages
 @using Client.Pages.OtherPages
 @using Syncfusion.Blazor.DropDowns
+@using ClientLibrary.Services.Implementations
 
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
+@inject HttpClient Http
 
 @inject IUserAccountService accountService
 
