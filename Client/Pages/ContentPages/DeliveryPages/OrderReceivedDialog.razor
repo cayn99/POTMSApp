@@ -6,11 +6,33 @@
             <EditForm Model="OrderReceived" Enhance OnSubmit="Save">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <div class="card border-success">
+                <div class="card border-warning">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Id</label>
-                            <input @bind="OrderReceived.Id" class="form-control" disabled />
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (OrderReceived.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = OrderReceived.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="@selected.ToString()"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="OrderReceived.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="Select PR Number"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="OrderReceived.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
                         </div>
                         <div class="form-group">
                             <label class="form-label">Received Date:</label>
@@ -56,6 +78,7 @@
     private IBrowserFile? UploadedFile;
     [Parameter] public OrderReceived OrderReceived { get; set; } = new();
     [Parameter] public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     [Parameter] public EventCallback<OrderReceived> HandleSaveOperationEvent { get; set; }
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
@@ -87,5 +110,6 @@
 
     public void ChangeTitle(string title) => Title = title;
 
-    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, OrderDelivery> args) => OrderReceived.OrderDeliveryId = args.Value;
+    public void OnValueChange(ChangeEventArgs<int, OrderDelivery> args) => OrderReceived.OrderDeliveryId = args.Value;
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => OrderReceived.PurchaseRequestId = args.Value;
 }

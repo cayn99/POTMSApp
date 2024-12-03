@@ -24,7 +24,7 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<Coa>> GetAll() => await context.AllCoa!.AsNoTracking().Include(pr => pr.PurchaseRequest).ToListAsync();
+        public async Task<List<Coa>> GetAll() => await context.AllCoa!.AsNoTracking().Include(c => c.PurchaseRequest).ToListAsync();
         public async Task<Coa> GetById(int id) => await context.AllCoa.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(Coa item)

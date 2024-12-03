@@ -4,8 +4,34 @@
         <Header> @Title Budget Approval Details </Header>
         <Content>
             <EditForm Model="AccountingApproval" Enhance OnSubmit="Save">
-                <div class="card border-success">
+                <div class="card border-warning">
                     <div class="card-body">
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (AccountingApproval.AccountingComplete.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = AccountingApproval.AccountingComplete.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="@selected.ToString()"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="AccountingApproval.AccountingComplete.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="Select PR Number"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="AccountingApproval.AccountingComplete.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Request Receive Date</label>
                             <InputDate @bind-Value="AccountingApproval.DateReceived" class="form-control" />
@@ -56,9 +82,14 @@
     [Parameter]
     public AccountingApproval AccountingApproval { get; set; } = new AccountingApproval
         {
-            ReceivedBy = string.Empty
+            ReceivedBy = string.Empty,
+            AccountingComplete = new AccountingComplete
+            {
+                PurchaseRequest = new PurchaseRequest()
+            }
         };
     [Parameter] public EventCallback<AccountingApproval> HandleSaveOperationEvent { get; set; }
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
 
@@ -70,6 +101,13 @@
 
     public void OpenDialog()
     {
+        if (AccountingApproval.AccountingComplete == null)
+        {
+            AccountingApproval.AccountingComplete = new AccountingComplete
+                {
+                    PurchaseRequest = new PurchaseRequest() // Initialize nested PurchaseRequest as well
+                };
+        }
         IsVisible = true;
         AccountingApproval.DateReceived = DateTime.Now;
 
@@ -182,4 +220,6 @@
     }
 
     public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => AccountingApproval.AccountingComplete!.PurchaseRequestId = args.Value;
 }

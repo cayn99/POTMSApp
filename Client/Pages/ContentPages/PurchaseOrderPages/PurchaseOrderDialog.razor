@@ -4,8 +4,38 @@
         <Header> @Title Purchase Order </Header>
         <Content>
             <EditForm Model="PurchaseOrder" Enhance OnSubmit="Save">
-                <div class="card border-success">
+                <div class="card border-warning">
                     <div class="card-body">
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (PurchaseOrder.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = PurchaseOrder.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                Placeholder="@selected.ToString()"
+                                DataSource="PurchaseRequests"
+                                @bind-Value="PurchaseOrder.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                Placeholder="Select PR Number"
+                                DataSource="PurchaseRequests"
+                                @bind-Value="PurchaseOrder.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PO Number</label>
+                            <InputText @bind-Value="PurchaseOrder.PoNumber" class="form-control" />
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Supplier</label>
                             <InputText @bind-Value="PurchaseOrder.Supplier" class="form-control" />
@@ -17,10 +47,6 @@
                         <div class="form-group">
                             <label class="form-label">TIN</label>
                             <InputText @bind-Value="PurchaseOrder.Tin" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">PO Number</label>
-                            <InputText @bind-Value="PurchaseOrder.PoNumber" class="form-control" />
                         </div>
                         <div class="form-group">
                             <label class="form-label">Received By</label>
@@ -63,6 +89,7 @@
     [Parameter]
     public PurchaseOrder PurchaseOrder { get; set; } = new();
     [Parameter] public EventCallback<PurchaseOrder> HandleSaveOperationEvent { get; set; }
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
     public void OpenDialog()
@@ -74,4 +101,6 @@
     async Task Save() => await HandleSaveOperationEvent.InvokeAsync(PurchaseOrder);
 
     public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => PurchaseOrder.PurchaseRequestId = args.Value;
 }

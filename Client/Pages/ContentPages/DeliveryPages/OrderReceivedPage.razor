@@ -5,7 +5,7 @@
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-lg-12">
-                <div class="card shadow-lg border-info">
+                <div class="card shadow-lg border-dark">
                     <div class="card-header">
                         <h4 class="float-start">Received Orders</h4>
                         <button class="btn btn-success float-end" @onclick="OpenDialog">
@@ -20,6 +20,7 @@
                             <GridPageSettings PageSize="5"></GridPageSettings>
                             <GridEvents TValue="OrderReceived"></GridEvents>
                             <GridColumns>
+                                <GridColumn Field=@nameof(PurchaseRequest.PrNumber) HeaderText="PR Number"></GridColumn>
                                 <GridColumn Field=@nameof(OrderReceived.DateReceived) HeaderText="Date Received"></GridColumn>
                                 <GridColumn Field=@nameof(OrderReceived.DeliveryDays) HeaderText="Days of Delivery"></GridColumn>
                                 <GridColumn Field=@nameof(OrderReceived.ExtensionLetterFileName) HeaderText="Extension Letter"></GridColumn>
@@ -48,7 +49,8 @@
 <OrderReceivedDialog @ref="orderReceivedDialog"
 HandleSaveOperationEvent="HandleSaveOperationEvent"
 OrderReceived="OrderReceived"
-OrderDeliveries="OrderDeliveries"/>
+OrderDeliveries="OrderDeliveries"
+PurchaseRequests="PurchaseRequests" />
 @code {
     private SfGrid<OrderReceived>? DefaultGrid;
     OrderReceivedDialog? orderReceivedDialog;
@@ -56,16 +58,19 @@ OrderDeliveries="OrderDeliveries"/>
     public string Title { get; set; } = "Add";
     public List<OrderReceived> OrdersReceived { get; set; } = new();
     public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+    public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
 
     protected async override Task OnInitializedAsync()
     {
         await GetOrdersReceived();
         await GetOrderDeliveries();
+        await GetPurchaseRequests();
         allState.Action += StateHasChanged;
     }
 
     private async Task GetOrdersReceived() => OrdersReceived = await orderReceivedService.GetAll(Constants.OrderReceivedBaseUrl);
     private async Task GetOrderDeliveries() => OrderDeliveries = await orderDeliveryService.GetAll(Constants.OrderDeliveryBaseUrl);
+    private async Task GetPurchaseRequests() => PurchaseRequests = await purchaseRequestService.GetAll(Constants.PurchaseRequestBaseUrl);
 
     void OpenDialog() => orderReceivedDialog?.OpenDialog();
 
@@ -102,9 +107,10 @@ OrderDeliveries="OrderDeliveries"/>
         bool confirm = await dialogService.ConfirmAsync($"You are going to delete received delivery ID #{orderReceived.Id}, are you sure?", "Confirm Delete");
         if (!confirm) return;
 
-        var response = await orderReceivedService.DeleteById(orderReceived.Id, Constants.OrderDeliveryBaseUrl);
+        var response = await orderReceivedService.DeleteById(orderReceived.Id, Constants.PurchaseRequestBaseUrl);
         if (await DisplayMessage(response.Flag, response.Message))
             await GetOrderDeliveries();
+            await GetPurchaseRequests();
     }
 
     private async Task<bool> DisplayMessage(bool flag, string message)

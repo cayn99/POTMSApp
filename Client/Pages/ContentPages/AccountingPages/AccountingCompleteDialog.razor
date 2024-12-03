@@ -4,11 +4,33 @@
         <Header> @Title Delivery Details </Header>
         <Content>
             <EditForm Model="AccountingComplete" Enhance OnSubmit="Save">
-                <div class="card border-success">
+                <div class="card border-warning">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Id</label>
-                            <input @bind="AccountingComplete.Id" class="form-control" disabled />
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (AccountingComplete.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = AccountingComplete.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="@selected.ToString()"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="AccountingComplete.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="Select PR Number"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="AccountingComplete.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
                         </div>
                         <div class="form-group">
                             <label class="form-label">Cancelled</label><br />
@@ -73,6 +95,7 @@
     </DialogButtons>
 </SfDialog>
 @code {
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     [Parameter] public AccountingComplete AccountingComplete { get; set; } = new();
     [Parameter] public List<AccountingApproval> AccountingApprovals { get; set; } = new();
     [Parameter] public EventCallback<AccountingComplete> HandleSaveOperationEvent { get; set; }
@@ -89,5 +112,6 @@
 
     public void ChangeTitle(string title) => Title = title;
 
-    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, AccountingApproval> args) => AccountingComplete.AccountingApprovalId = args.Value;
+    public void OnValueChange(ChangeEventArgs<int, AccountingApproval> args) => AccountingComplete.AccountingApprovalId = args.Value;
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => AccountingComplete.PurchaseRequestId = args.Value;
 }

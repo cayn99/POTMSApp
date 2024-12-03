@@ -2,7 +2,7 @@
 
 <div class="container-fluid" style="position:center">
     <div class="row">
-        <div class="col-lg-4" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer" @onclick="AccountingApprovalClicked">
             <div class="card border-success">
                 <div class="card-header" style="text-align:center">
                     <i class="bi bi-currency-dollar text-success"></i> On Budget Approval
@@ -10,7 +10,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer" @onclick="OrderDeliveryClicked">
             <div class="card border-danger">
                 <div class="card-header" style="text-align:center">
                     <i class="bi bi-truck text-danger"></i> In Transit
@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer" @onclick="InspectionClicked">
             <div class="card border-info">
                 <div class="card-header" style="text-align:center"><i class="bi bi-search text-info"></i> Ongoing Inspection
                 <span class="badge bg-info fs-6"> @Inspections.Count </span>
@@ -46,6 +46,10 @@
         Inspections = await inspectionService.GetAll(Constants.InspectionBaseUrl);
         AccountingApprovals = await accountingApprovalService.GetAll(Constants.AccountingApprovalBaseUrl);
     }
+
+    void AccountingApprovalClicked() => allState.AccountingApprovalClicked();
+    void OrderDeliveryClicked() => allState.OrderDeliveryClicked();
+    void InspectionClicked() => allState.InspectionClicked();
 
     public void Dispose() => allState.Action -= StateHasChanged;
 

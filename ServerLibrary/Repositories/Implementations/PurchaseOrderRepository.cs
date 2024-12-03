@@ -24,7 +24,7 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<PurchaseOrder>> GetAll() => await context.PurchaseOrders.ToListAsync();
+        public async Task<List<PurchaseOrder>> GetAll() => await context.PurchaseOrders.AsNoTracking().Include(po => po.PurchaseRequest).ToListAsync();
         public async Task<PurchaseOrder> GetById(int id) => await context.PurchaseOrders.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(PurchaseOrder item)

@@ -1,40 +1,79 @@
 ﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
-    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
-    <DialogTemplates>
-        <Header> @Title Delivery Details </Header>
-        <Content>
-            <EditForm Model="OrderDelivery" Enhance OnSubmit="Save">
-                <div class="card border-success">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Delivery Schedule</label>
-                            <InputDate @bind-Value="OrderDelivery.Schedule" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Conforme</label>
-                            <InputDate @bind-Value="OrderDelivery.Conforme" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Deadline</label>
-                            <InputDate @bind-Value="OrderDelivery.Deadline" class="form-control" />
+     <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+        <DialogTemplates>
+            <Header> @Title Delivery Details </Header>
+            <Content>
+                <EditForm Model="OrderDelivery" Enhance OnSubmit="Save">
+                <div class="card border-warning">
+                        <div class="card-body">
+                            <div class="form-group mt-3 mb-3">
+                                <label class="form-label">Select PR Number</label>
+
+                                @if (OrderDelivery.OrderReceived.PurchaseRequest != null)
+                                {
+                                    // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                    int selected = OrderDelivery.OrderReceived.PurchaseRequestId;
+                                    <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                    Placeholder="@selected.ToString()"
+                                    DataSource="PurchaseRequests"
+                                    @bind-Value="OrderDelivery.OrderReceived.PurchaseRequestId">
+                                        <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                        <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                    </SfDropDownList>
+                                }
+                                else
+                                {
+                                    <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                    Placeholder="Select PR Number"
+                                    DataSource="PurchaseRequests"
+                                    @bind-Value="OrderDelivery.OrderReceived.PurchaseRequestId">
+                                        <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                        <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                    </SfDropDownList>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Delivery Schedule</label>
+                                <InputDate @bind-Value="OrderDelivery.Schedule" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Conforme</label>
+                                <InputDate @bind-Value="OrderDelivery.Conforme" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Deadline</label>
+                                <InputDate @bind-Value="OrderDelivery.Deadline" class="form-control" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </EditForm>
-        </Content>
-    </DialogTemplates>
-    <DialogButtons>
-        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
-    </DialogButtons>
-</SfDialog>
+                </EditForm>
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+        </DialogButtons>
+    </SfDialog>
 @code {
-    [Parameter]
-    public OrderDelivery OrderDelivery { get; set; } = new();
+    [Parameter] public OrderDelivery OrderDelivery { get; set; } = new OrderDelivery
+    {
+        OrderReceived = new OrderReceived
+            {
+                PurchaseRequest = new PurchaseRequest()
+            }
+    };
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     [Parameter] public EventCallback<OrderDelivery> HandleSaveOperationEvent { get; set; }
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
     public void OpenDialog()
     {
+        if (OrderDelivery.OrderReceived == null)
+        {
+            OrderDelivery.OrderReceived = new OrderReceived
+                {
+                    PurchaseRequest = new PurchaseRequest() // Initialize nested PurchaseRequest as well
+                };
+        }
         IsVisible = true;
         OrderDelivery.Schedule = DateTime.Now;
         OrderDelivery.Conforme = DateTime.Now;
@@ -48,4 +87,6 @@
     }
 
     public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => OrderDelivery.OrderReceived!.PurchaseRequestId = args.Value;
 }

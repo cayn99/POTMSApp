@@ -4,8 +4,34 @@
         <Header> @Title Inspection Details </Header>
         <Content>
             <EditForm Model="Inspection" Enhance OnSubmit="Save">
-                <div class="card border-success">
+                <div class="card border-warning">
                     <div class="card-body">
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (Inspection.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = Inspection.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="@selected.ToString()"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="Inspection.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="Select PR Number"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="Inspection.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Status</label>
                             <InputSelect @bind-Value="Inspection.Status" class="form-control">
@@ -47,6 +73,7 @@
             AcceptedBy = string.Empty
         };
     [Parameter] public EventCallback<Inspection> HandleSaveOperationEvent { get; set; }
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
     public void OpenDialog()
@@ -73,4 +100,6 @@
     }
 
     public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => Inspection.PurchaseRequestId = args.Value;
 }

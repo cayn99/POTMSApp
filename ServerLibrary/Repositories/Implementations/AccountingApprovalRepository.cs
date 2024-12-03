@@ -24,7 +24,9 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<AccountingApproval>> GetAll() => await context.AccountingApprovals.ToListAsync();
+        public async Task<List<AccountingApproval>> GetAll() => await context.AccountingApprovals.AsNoTracking().Include(aa => aa.AccountingComplete)
+        .ThenInclude(ac => ac.PurchaseRequest) // Load PurchaseRequest
+        .ToListAsync();
         public async Task<AccountingApproval> GetById(int id) => await context.AccountingApprovals.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(AccountingApproval item)

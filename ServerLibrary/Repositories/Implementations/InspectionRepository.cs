@@ -24,7 +24,7 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<Inspection>> GetAll() => await context.Inspections.ToListAsync();
+        public async Task<List<Inspection>> GetAll() => await context.Inspections!.AsNoTracking().Include(i => i.PurchaseRequest).ToListAsync();
         public async Task<Inspection> GetById(int id) => await context.Inspections.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(Inspection item)

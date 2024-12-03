@@ -20,6 +20,7 @@
                             <GridPageSettings PageSize="5"></GridPageSettings>
                             <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="Inspection"></GridEvents>
                             <GridColumns>
+                                <GridColumn Field=@nameof(PurchaseRequest.PrNumber) HeaderText="PR Number"></GridColumn>
                                 <GridColumn Field=@nameof(Inspection.Status) HeaderText="Status"></GridColumn>
                                 <GridColumn Field=@nameof(Inspection.DateInspected) HeaderText="Date of Inspection"></GridColumn>
                                 <GridColumn Field=@nameof(Inspection.Inspector) HeaderText="Inspector"></GridColumn>
@@ -49,7 +50,8 @@
 }
 <InspectionDialog @ref="inspectionDialog"
            HandleSaveOperationEvent="HandleSaveOperationEvent"
-           Inspection="Inspection" />
+           Inspection="Inspection"
+           PurchaseRequests="PurchaseRequests"/>
 @code {
     private SfGrid<Inspection>? DefaultGrid;
     InspectionDialog? inspectionDialog;
@@ -60,14 +62,17 @@
         };
     public string Title { get; set; } = "Add";
     public List<Inspection> Inspections { get; set; } = new();
+    public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
 
     protected async override Task OnInitializedAsync()
     {
         await GetInspections();
+        await GetPurchaseRequests();
         allState.Action += StateHasChanged;
     }
 
     private async Task GetInspections() => Inspections = await inspectionService.GetAll(Constants.InspectionBaseUrl);
+    private async Task GetPurchaseRequests() => PurchaseRequests = await purchaseRequestService.GetAll(Constants.PurchaseRequestBaseUrl);
 
     void OpenDialog() => inspectionDialog?.OpenDialog();
 
@@ -108,9 +113,9 @@
         bool confirm = await dialogService.ConfirmAsync($"You are going to delete Inspection ID #{inspection.Id}, are you sure?", "Confirm Delete");
         if (!confirm) return;
 
-        var response = await inspectionService.DeleteById(inspection.Id, Constants.InspectionBaseUrl);
+        var response = await inspectionService.DeleteById(inspection.Id, Constants.PurchaseRequestBaseUrl);
         if (await DisplayMessage(response.Flag, response.Message))
-            await GetInspections();
+            await GetPurchaseRequests();
     }
 
     private async Task<bool> DisplayMessage(bool flag, string message)
