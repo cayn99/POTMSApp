@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
@@ -16,7 +17,9 @@ namespace BaseLibrary.Entities
         public DateTime Conforme { get; set; }
         [Required, DataType(DataType.DateTime)]
         public DateTime Deadline { get; set; }
-		public OrderReceived? OrderReceived { get; set; }
+        [JsonIgnore]
+        public OrderReceived? OrderReceived { get; set; }
 
-	}
+
+    }
 }

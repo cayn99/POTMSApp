@@ -54,7 +54,7 @@ builder.Services.AddScoped<IGenericRepositoryInterface<Inspection>, InspectionRe
 builder.Services.AddScoped<IGenericRepositoryInterface<OrderDelivery>, OrderDeliveryRepository>();
 builder.Services.AddScoped<IGenericRepositoryInterface<OrderReceived>, OrderReceivedRepository>();
 builder.Services.AddScoped<IGenericRepositoryInterface<PurchaseOrder>, PurchaseOrderRepository>();
-builder.Services.AddScoped<IGenericRepositoryInterface<Request>, RequestRepository>();
+builder.Services.AddScoped<IGenericRepositoryInterface<PurchaseRequest>, PurchaseRequestRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -1,0 +1,91 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Delivery Details </Header>
+        <Content>
+            <EditForm Model="OrderReceived" Enhance OnSubmit="Save">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Id</label>
+                            <input @bind="OrderReceived.Id" class="form-control" disabled />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Received Date:</label>
+                            <InputDate @bind-Value="OrderReceived.DateReceived" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Delivery Days</label>
+                            <InputNumber @bind-Value="OrderReceived.DeliveryDays" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Extension Letter</label>
+                            <InputFile OnChange="OnFileSelected" class="form-control" />
+                        </div>
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select Delivery Details</label>
+
+                            @if (OrderReceived.OrderDelivery != null)
+                            {
+                                int selected = OrderReceived.OrderDelivery!.Id;
+                                <SfDropDownList TValue="int" TItem="OrderDelivery" Placeholder="@selected.ToString()" DataSource="OrderDeliveries">
+                                    <DropDownListFieldSettings Value="Id" Text="Id"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="OrderDelivery" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="OrderDelivery" Placeholder="Select Delivery Details" DataSource="OrderDeliveries">
+                                    <DropDownListFieldSettings Value="Id" Text="Id"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="OrderDelivery" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    private IBrowserFile? UploadedFile;
+    [Parameter] public OrderReceived OrderReceived { get; set; } = new();
+    [Parameter] public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+    [Parameter] public EventCallback<OrderReceived> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        // Get the selected file
+        UploadedFile = e.File;
+
+        if (UploadedFile != null)
+        {
+            // Process the file (e.g., read, validate, or upload to the server)
+            using var stream = UploadedFile.OpenReadStream(10 * 1024 * 1024); // Max file size: 10 MB
+            var buffer = new byte[UploadedFile.Size];
+            await stream.ReadAsync(buffer, 0, (int)UploadedFile.Size);
+
+            // Save the file content to the model or send it to the server
+            // Example: OrderReceived.ExtensionLetterFile = buffer;
+        }
+    }
+
+    async void Save() => await HandleSaveOperationEvent.InvokeAsync(OrderReceived);
+
+    public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, OrderDelivery> args) => OrderReceived.OrderDeliveryId = args.Value;
+}

@@ -1,34 +1,53 @@
-﻿<div class="container-fluid">
+﻿@attribute [Authorize]
+
+<div class="container-fluid" style="position:center">
     <div class="row">
-        <div class="col-lg-2" style="cursor: pointer;">
-            <div class="card border-primary">
-                <div class="card-header"><i class="bi-file-earmark-plus text-primary"></i> Requests</div>
-            </div>
-        </div>
-        <div class="col-lg-2" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer;">
             <div class="card border-success">
-                <div class="card-header"><i class="bi bi-truck text-success"></i> For Delivery</div>
+                <div class="card-header" style="text-align:center">
+                    <i class="bi bi-currency-dollar text-success"></i> On Budget Approval
+                    <span class="badge bg-success fs-6"> @AccountingApprovals.Count </span>    
+                </div>
             </div>
         </div>
-        <div class="col-lg-2" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer;">
             <div class="card border-danger">
-                <div class="card-header"><i class="bi bi-search text-danger"></i> For Inspection</div>
+                <div class="card-header" style="text-align:center">
+                    <i class="bi bi-truck text-danger"></i> In Transit
+                <span class="badge bg-danger fs-6"> @OrderDeliveries.Count </span>
+                </div>
             </div>
         </div>
-        <div class="col-lg-2" style="cursor: pointer;">
-            <div class="card border-warning">
-                <div class="card-header"><i class="bi bi-wallet2 text-warning"></i> Budget Approval</div>
-            </div>
-        </div>
-        <div class="col-lg-2" style="cursor: pointer;">
+        <div class="col-lg-4" style="cursor: pointer;">
             <div class="card border-info">
-                <div class="card-header"><i class="bi bi-calculator text-info"></i> COA</div>
+                <div class="card-header" style="text-align:center"><i class="bi bi-search text-info"></i> Ongoing Inspection
+                <span class="badge bg-info fs-6"> @Inspections.Count </span>
+                </div>
             </div>
         </div>
-        <div class="col-lg-2" style="cursor: pointer;">
-            <div class="card border-dark">
-                <div class="card-header"><i class="bi bi-bag-check text-dark"></i> Complete Orders</div>
-            </div>
-        </div>
+
     </div>
 </div>
+
+@code {
+    public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+    public List<Inspection> Inspections { get; set; } = new();
+    public List<AccountingApproval> AccountingApprovals { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        allState.Action += StateHasChanged;
+        await LoadDefaults();
+    }
+
+    async Task LoadDefaults()
+    {
+        OrderDeliveries = await orderDeliveryService.GetAll(Constants.OrderDeliveryBaseUrl);
+        Inspections = await inspectionService.GetAll(Constants.InspectionBaseUrl);
+        AccountingApprovals = await accountingApprovalService.GetAll(Constants.AccountingApprovalBaseUrl);
+    }
+
+    public void Dispose() => allState.Action -= StateHasChanged;
+
+
+}

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
@@ -32,6 +33,7 @@ namespace BaseLibrary.Entities
         public decimal? ThirdPayment { get; set; } = 0m;
         [DataType(DataType.Currency)]
         public decimal? FourthPayment { get; set; } = 0m;
+        [JsonIgnore]
 		public AccountingComplete? AccountingComplete { get; set; }
-		}
+    }
 	}

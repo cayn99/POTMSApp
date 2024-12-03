@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServerLibrary.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class updatedata : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,39 +31,6 @@ namespace ServerLibrary.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AllCoa",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderCopy = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    InspectionRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InspectionReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AllCoa", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Inspections",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    DateInspected = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Inspector = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateAccepted = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inspections", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderDeliveries",
                 columns: table => new
                 {
@@ -79,6 +46,32 @@ namespace ServerLibrary.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PurchaseRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PrNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Division = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Particulars = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UnitType = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DeliveryTerm = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryArea = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Purpose = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProjectTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProjectCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Requestor = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PurchaseRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokenInfos",
                 columns: table => new
                 {
@@ -90,31 +83,6 @@ namespace ServerLibrary.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RefreshTokenInfos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Requests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RecordNumber = table.Column<int>(type: "int", nullable: false),
-                    Division = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProjectCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FundSource = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RequestNumber = table.Column<int>(type: "int", nullable: false),
-                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderNumber = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Particulars = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Requestor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Requests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,7 +141,8 @@ namespace ServerLibrary.Data.Migrations
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Penalty = table.Column<bool>(type: "bit", nullable: false),
-                    AccountingApprovalId = table.Column<int>(type: "int", nullable: false)
+                    AccountingApprovalId = table.Column<int>(type: "int", nullable: false),
+                    PurchaseRequestId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,6 +151,59 @@ namespace ServerLibrary.Data.Migrations
                         name: "FK_AllAccountingComplete_AccountingApprovals_AccountingApprovalId",
                         column: x => x.AccountingApprovalId,
                         principalTable: "AccountingApprovals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AllAccountingComplete_PurchaseRequests_PurchaseRequestId",
+                        column: x => x.PurchaseRequestId,
+                        principalTable: "PurchaseRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AllCoa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderCopy = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InspectionRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InspectionReceivedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PurchaseRequestId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AllCoa", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AllCoa_PurchaseRequests_PurchaseRequestId",
+                        column: x => x.PurchaseRequestId,
+                        principalTable: "PurchaseRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inspections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DateInspected = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Inspector = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateAccepted = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AcceptedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PurchaseRequestId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inspections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inspections_PurchaseRequests_PurchaseRequestId",
+                        column: x => x.PurchaseRequestId,
+                        principalTable: "PurchaseRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -194,9 +216,10 @@ namespace ServerLibrary.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeliveryDays = table.Column<int>(type: "int", nullable: false),
+                    ExtensionLetterFile = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     ExtensionLetterFileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExtensionLetterContent = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    OrderDeliveryId = table.Column<int>(type: "int", nullable: false)
+                    OrderDeliveryId = table.Column<int>(type: "int", nullable: false),
+                    PurchaseRequestId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,6 +230,12 @@ namespace ServerLibrary.Data.Migrations
                         principalTable: "OrderDeliveries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrdersReceived_PurchaseRequests_PurchaseRequestId",
+                        column: x => x.PurchaseRequestId,
+                        principalTable: "PurchaseRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,44 +244,26 @@ namespace ServerLibrary.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Supplier = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tin = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PoNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Procurement = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryPlace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryTerm = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentTerm = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryDays = table.Column<int>(type: "int", nullable: false),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestId = table.Column<int>(type: "int", nullable: false),
-                    OrderReceivedId = table.Column<int>(type: "int", nullable: false),
-                    AccountingCompleteId = table.Column<int>(type: "int", nullable: false),
-                    InspectionId = table.Column<int>(type: "int", nullable: false),
-                    CoaId = table.Column<int>(type: "int", nullable: false)
+                    PurchaseRequestId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PurchaseOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PurchaseOrders_AllAccountingComplete_AccountingCompleteId",
-                        column: x => x.AccountingCompleteId,
-                        principalTable: "AllAccountingComplete",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_AllCoa_CoaId",
-                        column: x => x.CoaId,
-                        principalTable: "AllCoa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_Inspections_InspectionId",
-                        column: x => x.InspectionId,
-                        principalTable: "Inspections",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_OrdersReceived_OrderReceivedId",
-                        column: x => x.OrderReceivedId,
-                        principalTable: "OrdersReceived",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseOrders_Requests_RequestId",
-                        column: x => x.RequestId,
-                        principalTable: "Requests",
+                        name: "FK_PurchaseOrders_PurchaseRequests_PurchaseRequestId",
+                        column: x => x.PurchaseRequestId,
+                        principalTable: "PurchaseRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -264,45 +275,57 @@ namespace ServerLibrary.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AllAccountingComplete_PurchaseRequestId",
+                table: "AllAccountingComplete",
+                column: "PurchaseRequestId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AllCoa_PurchaseRequestId",
+                table: "AllCoa",
+                column: "PurchaseRequestId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Inspections_PurchaseRequestId",
+                table: "Inspections",
+                column: "PurchaseRequestId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdersReceived_OrderDeliveryId",
                 table: "OrdersReceived",
                 column: "OrderDeliveryId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_AccountingCompleteId",
-                table: "PurchaseOrders",
-                column: "AccountingCompleteId",
+                name: "IX_OrdersReceived_PurchaseRequestId",
+                table: "OrdersReceived",
+                column: "PurchaseRequestId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_CoaId",
+                name: "IX_PurchaseOrders_PurchaseRequestId",
                 table: "PurchaseOrders",
-                column: "CoaId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_InspectionId",
-                table: "PurchaseOrders",
-                column: "InspectionId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_OrderReceivedId",
-                table: "PurchaseOrders",
-                column: "OrderReceivedId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseOrders_RequestId",
-                table: "PurchaseOrders",
-                column: "RequestId",
+                column: "PurchaseRequestId",
                 unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AllAccountingComplete");
+
+            migrationBuilder.DropTable(
+                name: "AllCoa");
+
+            migrationBuilder.DropTable(
+                name: "Inspections");
+
+            migrationBuilder.DropTable(
+                name: "OrdersReceived");
+
             migrationBuilder.DropTable(
                 name: "PurchaseOrders");
 
@@ -319,25 +342,13 @@ namespace ServerLibrary.Data.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "AllAccountingComplete");
-
-            migrationBuilder.DropTable(
-                name: "AllCoa");
-
-            migrationBuilder.DropTable(
-                name: "Inspections");
-
-            migrationBuilder.DropTable(
-                name: "OrdersReceived");
-
-            migrationBuilder.DropTable(
-                name: "Requests");
-
-            migrationBuilder.DropTable(
                 name: "AccountingApprovals");
 
             migrationBuilder.DropTable(
                 name: "OrderDeliveries");
+
+            migrationBuilder.DropTable(
+                name: "PurchaseRequests");
         }
     }
 }

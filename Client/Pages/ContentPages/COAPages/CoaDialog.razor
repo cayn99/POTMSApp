@@ -1,0 +1,83 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Coa </Header>
+        <Content>
+            <EditForm Model="Coa" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group mt-3 mb-3">
+                            <label class="form-label">Select PR Number</label>
+
+                            @if (Coa.PurchaseRequest != null)
+                            {
+                                // We will use the PurchaseRequestId, which is of type int, and display the corresponding PrNumber
+                                int selected = Coa.PurchaseRequestId;
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="@selected.ToString()"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="Coa.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                            else
+                            {
+                                <SfDropDownList TValue="int" TItem="PurchaseRequest"
+                                                Placeholder="Select PR Number"
+                                                DataSource="PurchaseRequests"
+                                                @bind-Value="Coa.PurchaseRequestId">
+                                    <DropDownListFieldSettings Value="Id" Text="PrNumber"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="PurchaseRequest" ValueChange="OnValueChange"></DropDownListEvents>
+                                </SfDropDownList>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PO Copy Receive Date:</label>
+                            <InputDate @bind-Value="Coa.OrderCopy" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Received By:</label>
+                            <InputText @bind-Value="Coa.ReceivedBy" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Inspection Request Date:</label>
+                            <InputDate @bind-Value="Coa.InspectionRequest" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Received By:</label>
+                            <InputText @bind-Value="Coa.InspectionReceivedBy" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter] public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
+    [Parameter] public Coa Coa { get; set; }
+    [Parameter] public EventCallback<Coa> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        Coa.OrderCopy = DateTime.Now;
+        Coa.InspectionRequest = DateTime.Now;
+        StateHasChanged();
+    }
+
+
+    async void Save()
+    {
+        await HandleSaveOperationEvent.InvokeAsync(Coa); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title) => Title = title;
+
+    public void OnValueChange(ChangeEventArgs<int, PurchaseRequest> args) => Coa.PurchaseRequestId = args.Value;
+}

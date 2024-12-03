@@ -1,0 +1,121 @@
+﻿@page "/delivery/orderdelivery"
+@implements IDisposable
+@if (allState.ShowOrderDelivery)
+{
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow-lg border-info">
+                    <div class="card-header">
+                        <h4 class="float-start">Deliveries In Transit</h4>
+                        <button class="btn btn-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Input Details for Budget Approval
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var Tool = (new List<string>() { "Search" });
+                        }
+                        <SfGrid DataSource="@OrderDeliveries" AllowPaging="true" AllowSorting="true" Toolbar=@Tool @ref="DefaultGrid">
+                            <GridPageSettings PageSize="5"></GridPageSettings>
+                            <GridEvents TValue="OrderDelivery"></GridEvents>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(OrderDelivery.Schedule) HeaderText="Schedule"></GridColumn>
+                                <GridColumn Field=@nameof(OrderDelivery.Conforme) HeaderText="Conforme"></GridColumn>
+                                <GridColumn Field=@nameof(OrderDelivery.Deadline) HeaderText="Deadline"></GridColumn>
+                                <GridColumn HeaderText="Action">
+                                    <Template>
+                                        @{
+                                            var orderDelivery = (context as OrderDelivery);
+                                            <div>
+                                                <button type="button" class="btn btn-primary btn-sm" style="text-align: center" @onclick="()=>EditClicked(orderDelivery!)"><i class="bi bi-pencil"></i> Edit </button>
+                                                <button type="button" class="btn btn-danger btn-sm" style="text-align: center" @onclick="()=>DeleteClicked(orderDelivery!)"><i class="bi bi-trash"></i> Delete </button>
+                                            </div>
+                                        }
+                                    </Template>
+                                </GridColumn>
+                            </GridColumns>
+                        </SfGrid>
+
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<OrderDeliveryDialog @ref="orderDeliveryDialog"
+HandleSaveOperationEvent="HandleSaveOperationEvent"
+OrderDelivery="OrderDelivery" />
+@code {
+    private SfGrid<OrderDelivery>? DefaultGrid;
+    OrderDeliveryDialog? orderDeliveryDialog;
+    OrderDelivery OrderDelivery = new();
+    public string Title { get; set; } = "Add";
+    public List<OrderDelivery> OrderDeliveries { get; set; } = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetOrderDeliveries();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetOrderDeliveries() => OrderDeliveries = await orderDeliveryService.GetAll(Constants.OrderDeliveryBaseUrl);
+
+    void OpenDialog() => orderDeliveryDialog?.OpenDialog();
+
+    private async Task HandleSaveOperationEvent(OrderDelivery orderDelivery)
+    {
+        bool successCheck = false;
+        if (OrderDelivery.Id > 0)
+        {
+            var result = await orderDeliveryService.Update(orderDelivery, Constants.OrderDeliveryBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await orderDeliveryService.Insert(orderDelivery, Constants.OrderDeliveryBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            OrderDelivery OrderDelivery = new();
+            await GetOrderDeliveries();
+            orderDeliveryDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(OrderDelivery orderDelivery)
+    {
+        orderDeliveryDialog?.ChangeTitle("Update");
+        OrderDelivery = orderDelivery;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(OrderDelivery orderDelivery)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete delivery details with ID #{OrderDelivery.Id}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await orderDeliveryService.DeleteById(orderDelivery.Id, Constants.OrderDeliveryBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetOrderDeliveries();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public void Dispose() => allState.Action -= StateHasChanged;
+}

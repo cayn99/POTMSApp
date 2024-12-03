@@ -2,26 +2,21 @@
 @using Client.ApplicationStates
 @using Microsoft.AspNetCore.Components.Authorization
 
-<AuthorizeView>
-    <Authorized>
-        <div class="top-row ps-3 navbar navbar-light" style="padding-top: 59px; padding-bottom: 59px">
+        <div class="top-row ps-3 navbar navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="">
-                    Welcome, @CapitalizeName(context.User.Identity!.Name)!
+                <a class="navbar-brand" href="/home/dashboard">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                 </a>
                 <button title="Navigation Menu" class="navbar-toggler" @onclick="ToggleNavMenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
         </div>
-
         <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
             <nav class="flex-column">
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link p-2" href="/home/dashboard">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-                    </NavLink>
-                </div>
+
+            <AuthorizeView Roles="Admin">
+                <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link p-2" href="javascript: void(0)" @onclick="ShowAdminMenuContainer">
                         <div class="hstack gap-1">
@@ -29,17 +24,26 @@
                             <span>Manage Users</span>
                         </div>
                     </NavLink>
-                    <a class="nav-link p-2 text-white" href="/users" @onclick="UserClicked">
+                    <a class="nav-link p-2 text-white" href="/user" @onclick="UserClicked">
                         <div class="hstack" style="margin-left: 2rem; cursor: pointer; visibility: @CssStyle">
                             <span class="bi bi-people fs-5 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                             <span>Users</span>
                         </div>
                     </a>
                 </div>
-                <div class="nav-item px-3" style="margin-top: @RequestMargin">
-                    <NavLink class="nav-link p-2" href="/requests" @onclick="RequestClicked">
+                    </Authorized>
+                </AuthorizeView>
+
+                <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
+                    <NavLink class="nav-link p-2" href="/purchaseorder" @onclick="PurchaseOrderClicked">
+                        <span class="bi bi-bag-check fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
+                        <span>Purchase Orders</span>
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3" style="margin-top: @PurchaseRequestMargin">
+                    <NavLink class="nav-link p-2" href="/purchaserequest" @onclick="PurchaseRequestClicked">
                         <span class="bi bi-file-earmark-plus fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                        <span>Requests</span>
+                        <span>Purchase Requests</span>
                     </NavLink>
                 </div>
                 <div class="nav-item px-3" style="margin-top: @AccountingMargin">
@@ -49,14 +53,14 @@
                             <span>Accounting</span>
                         </div>
                     </NavLink>
-                    <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @AccountingCssStyle">
+                    <div class="nav-link p-2 text-white" style="margin-left: 1.5rem; visibility: @AccountingCssStyle">
                         <ul class="list-group">
                             <li style="list-style: none; cursor: pointer">
                                 <a class="nav-link p-2" href="/accounting/accountingapproval" @onclick="AccountingApprovalClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-currency-dollar fs-5 text-center" aria-hidden="true"
                                               style="margin-top: -2rem"></span>
-                                        <span class="fs-6">Approval</span>
+                                        <span class="fs-6">Budget Approval</span>
                                     </div>
                                 </a>
                             </li>
@@ -79,10 +83,10 @@
                             <span>Deliveries</span>
                         </div>
                     </NavLink>
-                    <div class="nav-link p-2 text-white" style="margin-left: 2rem; visibility: @DeliveryCssStyle">
+                    <div class="nav-link p-2 text-white" style="margin-left: 1.5rem; visibility: @DeliveryCssStyle">
                         <ul class="list-group">
                             <li style="list-style: none; cursor: pointer">
-                                <a class="nav-link p-2" href="/deliveries/orderdeliveries" @onclick="OrderDeliveryClicked">
+                                <a class="nav-link p-2" href="/delivery/orderdelivery" @onclick="OrderDeliveryClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-box-seam-fill fs-5 text-center" aria-hidden="true"
                                               style="margin-top: -2rem"></span>
@@ -91,7 +95,7 @@
                                 </a>
                             </li>
                             <li style="list-style: none; cursor: pointer">
-                                <a class="nav-link p-2" href="/deliveries/ordersreceived" @onclick="OrderReceivedClicked">
+                                <a class="nav-link p-2" href="/delivery/orderreceived" @onclick="OrderReceivedClicked">
                                     <div class="hstack text-wrap">
                                         <span class="bi bi-check-circle-fill fs-5 text-center" aria-hidden="true"
                                               style="margin-top: -2rem"></span>
@@ -109,21 +113,14 @@
                     </NavLink>
                 </div>
                 <div class="nav-item px-3" style="margin-top: @InspectionMargin">
-                    <NavLink class="nav-link p-2" href="/inspections" @onclick="InspectionClicked">
+                    <NavLink class="nav-link p-2" href="/inspection" @onclick="InspectionClicked">
                         <span class="bi bi-search fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
                         <span>Inspection</span>
                     </NavLink>
                 </div>
-                <div class="nav-item px-3" style="margin-top: @PurchaseOrderMargin">
-                    <NavLink class="nav-link p-2" href="/purchaseorders" @onclick="PurchaseOrderClicked">
-                        <span class="bi bi-bag-check fs-3 text-center" aria-hidden="true" style="margin-top: -2rem"></span>
-                        <span>Purchase Orders</span>
-                    </NavLink>
-                </div>
+
             </nav>
         </div>
-    </Authorized>
-</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;
@@ -132,7 +129,7 @@
 
     private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
 
-    public string RequestMargin { get; set; } = "-3.5rem";
+    public string PurchaseOrderMargin { get; set; } = "0rem";
     private string CssStyle = "hidden";
     public bool ShowHide { get; set; } = false;
     private void ShowAdminMenuContainer()
@@ -140,12 +137,12 @@
         ShowHide = !ShowHide;
         if (ShowHide)
         {
-            RequestMargin = "0";
+            PurchaseOrderMargin = "0";
             CssStyle = "visible";
         }
         else
         {
-            RequestMargin = "-3.5rem";
+            PurchaseOrderMargin = "-3.5rem";
             CssStyle = "hidden";
         }
     }
@@ -189,9 +186,9 @@
     }
 
     public string InspectionMargin { get; set; } = "0rem";
-    public string PurchaseOrderMargin { get; set; } = "0rem";
+    public string PurchaseRequestMargin { get; set; } = "0rem";
 
-    void RequestClicked() => allState.RequestClicked();
+    void PurchaseRequestClicked() => allState.PurchaseRequestClicked();
     void PurchaseOrderClicked() => allState.PurchaseOrderClicked();
     void AccountingApprovalClicked() => allState.AccountingApprovalClicked();
     void AccountingCompleteClicked() => allState.AccountingCompleteClicked();

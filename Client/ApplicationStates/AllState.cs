@@ -4,11 +4,11 @@
     {
         public Action? Action { get; set; }
 
-        public bool ShowRequest { get; set; }
-        public void RequestClicked()
+        public bool ShowPurchaseRequest { get; set; }
+        public void PurchaseRequestClicked()
         {
             ResetAllOrders();
-            ShowRequest = true;
+            ShowPurchaseRequest = true;
             Action?.Invoke();
         }
 
@@ -85,7 +85,7 @@
 
         private void ResetAllOrders()
         {
-            ShowRequest = false;
+            ShowPurchaseRequest = false;
             ShowPurchaseOrder = false;
             ShowAccountingApproval = false;
             ShowAccountingComplete = false;

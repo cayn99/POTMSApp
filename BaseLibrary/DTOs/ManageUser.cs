@@ -14,5 +14,7 @@ namespace BaseLibrary.DTOs
         public string? Email { get; set; }
         public int UserId { get; set; }
         public string? Role { get; set; }
+        public string? Division { get; set; }
+        public string? Position { get; set; }
     }
 }

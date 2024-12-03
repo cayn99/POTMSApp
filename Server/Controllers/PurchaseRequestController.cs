@@ -7,8 +7,8 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RequestController(IGenericRepositoryInterface<Request> genericRepositoryInterface) 
-        : GenericController<Request>(genericRepositoryInterface)
+    public class PurchaseRequestController(IGenericRepositoryInterface<PurchaseRequest> genericRepositoryInterface) 
+        : GenericController<PurchaseRequest>(genericRepositoryInterface)
     {
 
     }

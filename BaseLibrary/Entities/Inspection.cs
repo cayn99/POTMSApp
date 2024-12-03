@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BaseLibrary.Entities
@@ -23,6 +24,8 @@ namespace BaseLibrary.Entities
         [Required, DataType(DataType.DateTime)]
         public DateTime DateAccepted { get; set; }
         public required string AcceptedBy { get; set; }
-		public PurchaseOrder? PurchaseOrder { get; set; }
-	}
+        public int PurchaseRequestId { get; set; }
+        [JsonIgnore]
+        public PurchaseRequest? PurchaseRequest { get; set; }
+    }
 }

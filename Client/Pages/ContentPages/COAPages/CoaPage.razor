@@ -1,0 +1,148 @@
+﻿@page "/coa"
+@implements IDisposable
+@if (allState.ShowCoa)
+{
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow-lg border-info">
+                    <div class="card-header">
+                        <h4 class="float-start">Commission on Audit</h4>
+                        <button class="btn btn-success float-end" @onclick="OpenDialog">
+                            <i class="bi bi-plus-circle-dotted"></i> Input COA Details
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            var Tool = (new List<string>() { "Search", "ExcelExport", "PdfExport", "Print" });
+                        }
+                        <SfGrid DataSource="@AllCoa" AllowPaging="true" AllowSorting="true" Toolbar=@Tool AllowExcelExport="true" AllowPdfExport="true" @ref="DefaultGrid">
+                            <GridPageSettings PageSize="5"></GridPageSettings>
+                            <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="Coa"></GridEvents>
+                            <GridColumns>
+                                <GridColumn Field=@nameof(PurchaseRequest.PrNumber) HeaderText="PR Number"></GridColumn>
+                                <GridColumn Field=@nameof(Coa.OrderCopy) HeaderText="Copy of PO Received Date"></GridColumn>
+                                <GridColumn Field=@nameof(Coa.ReceivedBy) HeaderText="PO Received By"></GridColumn>
+                                <GridColumn Field=@nameof(Coa.InspectionRequest) HeaderText="Inspection Request Date"></GridColumn>
+                                <GridColumn Field=@nameof(Coa.InspectionReceivedBy) HeaderText="Inspection Received By"></GridColumn>
+                                <GridColumn HeaderText="Action">
+                                    <Template>
+                                        @{
+                                            var coa = (context as Coa);
+                                            <div>
+                                                <button type="button" class="btn btn-primary btn-sm" style="text-align: center" @onclick="()=>EditClicked(coa!)"><i class="bi bi-pencil"></i> Edit </button>
+                                                <button type="button" class="btn btn-danger btn-sm" style="text-align: center" @onclick="()=>DeleteClicked(coa!)"><i class="bi bi-trash"></i> Delete </button>
+                                            </div>
+                                        }
+                                    </Template>
+                                </GridColumn>
+                            </GridColumns>
+                        </SfGrid>
+
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<CoaDialog @ref="coaDialog"
+HandleSaveOperationEvent="HandleSaveOperationEvent"
+Coa="Coa" 
+PurchaseRequests="PurchaseRequests"/>
+@code {
+    private SfGrid<Coa>? DefaultGrid;
+    CoaDialog? coaDialog;
+    Coa Coa = new Coa
+        {
+            ReceivedBy = string.Empty,
+            InspectionReceivedBy = string.Empty
+        };
+    public List<PurchaseRequest> PurchaseRequests { get; set; } = new();
+    public string Title { get; set; } = "Add";
+    public List<Coa> AllCoa { get; set; } = new();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        await GetAllCoa();
+        await GetPurchaseRequests();
+        allState.Action += StateHasChanged;
+    }
+
+    private async Task GetAllCoa() => AllCoa = await coaService.GetAll(Constants.CoaBaseUrl);
+    private async Task GetPurchaseRequests() => PurchaseRequests = await purchaseRequestService.GetAll(Constants.PurchaseRequestBaseUrl);
+
+    void OpenDialog() => coaDialog?.OpenDialog();
+
+    private async Task HandleSaveOperationEvent(Coa coa)
+    {
+        bool successCheck = false;
+        if (Coa.Id > 0)
+        {
+            var result = await coaService.Update(coa, Constants.CoaBaseUrl);
+            successCheck = await DisplayMessage(result.Flag, result.Message);
+        }
+        else
+        {
+            var response = await coaService.Insert(coa, Constants.CoaBaseUrl);
+            successCheck = await DisplayMessage(response.Flag, response.Message);
+        }
+        if (successCheck)
+        {
+            Coa = new Coa
+                {
+                    ReceivedBy = string.Empty,
+                    InspectionReceivedBy = string.Empty
+                };
+            await GetAllCoa();
+            coaDialog?.ChangeTitle("Add");
+        }
+    }
+
+    private void EditClicked(Coa coa)
+    {
+        coaDialog?.ChangeTitle("Update");
+        Coa = coa;
+        OpenDialog();
+    }
+
+    private async Task DeleteClicked(Coa coa)
+    {
+        bool confirm = await dialogService.ConfirmAsync($"You are going to delete COA ID #{coa.Id}, are you sure?", "Confirm Delete");
+        if (!confirm) return;
+
+        var response = await coaService.DeleteById(coa.Id, Constants.PurchaseRequestBaseUrl);
+        if (await DisplayMessage(response.Flag, response.Message))
+            await GetPurchaseRequests();
+    }
+
+    private async Task<bool> DisplayMessage(bool flag, string message)
+    {
+        if (flag)
+        {
+            await dialogService.AlertAsync(message, "Success!");
+            return true;
+        }
+        else
+        {
+            await dialogService.AlertAsync(message, "Alert!");
+            return false;
+        }
+    }
+
+    public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Text == "Excel Export")
+            await this.DefaultGrid!.ExportToExcelAsync()!;
+
+        if (args.Item.Text == "PDF Export")
+            await this.DefaultGrid!.ExportToPdfAsync()!;
+
+        if (args.Item.Text == "Print")
+            await this.DefaultGrid!.PrintAsync()!;
+    }
+
+    public void Dispose() => allState.Action -= StateHasChanged;
+}

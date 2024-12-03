@@ -11,9 +11,17 @@
                             <input @bind="AccountingComplete.Id" class="form-control" disabled />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Cancelled</label>
-                            <InputCheckbox @bind-Value="AccountingComplete.Cancelled" class="form-check-input" />
-                            <label class="form-check-label">Yes</label>
+                            <label class="form-label">Cancelled</label><br />
+                            <InputRadioGroup @bind-Value="AccountingComplete.Cancelled" class="form-check">
+                                <div class="form-check">
+                                    <InputRadio Value="true" class="form-check-input" />
+                                    <label class="form-check-label">Yes</label>
+                                </div>
+                                <div class="form-check">
+                                    <InputRadio Value="false" class="form-check-input" />
+                                    <label class="form-check-label">No</label>
+                                </div>
+                            </InputRadioGroup>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Amount</label>
@@ -24,9 +32,17 @@
                             <InputNumber @bind-Value="AccountingComplete.Balance" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Penalty</label>
-                            <InputCheckbox @bind-Value="AccountingComplete.Penalty" class="form-check-input" />
-                            <label class="form-check-label">Yes</label>
+                            <label class="form-label">Penalty</label><br />
+                            <InputRadioGroup @bind-Value="AccountingComplete.Penalty" class="form-check">
+                                <div class="form-check">
+                                    <InputRadio Value="true" class="form-check-input" />
+                                    <label class="form-check-label">Yes</label>
+                                </div>
+                                <div class="form-check">
+                                    <InputRadio Value="false" class="form-check-input" />
+                                    <label class="form-check-label">No</label>
+                                </div>
+                            </InputRadioGroup>
                         </div>
                         <div class="form-group mt-3 mb-3">
                             <label class="form-label">Select Approval Details</label>
@@ -62,24 +78,16 @@
     [Parameter] public EventCallback<AccountingComplete> HandleSaveOperationEvent { get; set; }
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
+
     public void OpenDialog()
     {
         IsVisible = true;
         StateHasChanged();
     }
 
-    async void Save()
-    {
-        await HandleSaveOperationEvent.InvokeAsync(AccountingComplete); // Triggers the save and calls DisplayMessage
-    }
+    async void Save() => await HandleSaveOperationEvent.InvokeAsync(AccountingComplete); // Triggers the save and calls DisplayMessage
 
-    public void ChangeTitle(string title)
-    {
-        Title = title;
-    }
+    public void ChangeTitle(string title) => Title = title;
 
-    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, AccountingApproval> args)
-    {
-        AccountingComplete.AccountingApprovalId = args.Value;
-    }
+    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, AccountingApproval> args) => AccountingComplete.AccountingApprovalId = args.Value;
 }

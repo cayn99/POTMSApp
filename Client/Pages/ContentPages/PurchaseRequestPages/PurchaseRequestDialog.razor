@@ -1,0 +1,102 @@
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+    <DialogEvents OnOpen="OpenDialog"></DialogEvents>
+    <DialogTemplates>
+        <Header> @Title Purchase Request </Header>
+        <Content>
+            <EditForm Model="PurchaseRequest" Enhance OnSubmit="Save">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">PR Number</label>
+                            <InputText @bind-Value="PurchaseRequest.PrNumber" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Division</label>
+                            <InputText @bind-Value="PurchaseRequest.Division" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <InputDate @bind-Value="PurchaseRequest.Date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Particulars</label>
+                            <InputTextArea @bind-Value="PurchaseRequest.Particulars" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unit Type</label>
+                            <InputSelect @bind-Value="PurchaseRequest.UnitType" class="form-control">
+                                @foreach (var unitType in Enum.GetValues(typeof(PurchaseRequest.Unit)))
+                                {
+                                    <option value="@unitType">@unitType</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quantity</label>
+                            <InputNumber @bind-Value="PurchaseRequest.Quantity" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Unit Cost</label>
+                            <InputNumber @bind-Value="PurchaseRequest.UnitCost" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Total Cost</label>
+                            <InputNumber @bind-Value="PurchaseRequest.TotalCost" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Delivery Terms</label>
+                            <InputText @bind-Value="PurchaseRequest.DeliveryTerm" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Delivery Area</label>
+                            <InputText @bind-Value="PurchaseRequest.DeliveryArea" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Purpose</label>
+                            <InputTextArea @bind-Value="PurchaseRequest.Purpose" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Project Title</label>
+                            <InputTextArea @bind-Value="PurchaseRequest.ProjectTitle" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Project Code</label>
+                            <InputText @bind-Value="PurchaseRequest.ProjectCode" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Requestor</label>
+                            <InputText @bind-Value="PurchaseRequest.Requestor" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save"/>
+    </DialogButtons>
+</SfDialog>
+@code {
+    [Parameter]
+    public PurchaseRequest PurchaseRequest { get; set; } = new();
+    [Parameter] public EventCallback<PurchaseRequest> HandleSaveOperationEvent { get; set; }
+    private bool IsVisible { get; set; } = false;
+    public string Title { get; set; } = "Add";
+    public void OpenDialog()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    async void Save()
+    {
+        if (string.IsNullOrEmpty(PurchaseRequest.PrNumber))
+        {
+            await dialogService.AlertAsync("This field is required.", "Alert!");
+            return;
+        }
+        await HandleSaveOperationEvent.InvokeAsync(PurchaseRequest); // Triggers the save and calls DisplayMessage
+    }
+
+    public void ChangeTitle(string title) => Title = title;
+}

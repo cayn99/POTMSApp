@@ -15,13 +15,21 @@
 @using BaseLibrary.DTOs
 @using ClientLibrary.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
 @using ClientLibrary.Services.Contracts
 @using Syncfusion.Blazor.Popups
 @using Client.Pages.ContentPages.PurchaseOrderPages
+@using Client.Pages.ContentPages.PurchaseRequestPages
+@using Client.Pages.ContentPages.AccountingPages
+@using Client.Pages.ContentPages.COAPages
+@using Client.Pages.ContentPages.DeliveryPages
+@using Client.Pages.ContentPages.InspectionPages
 @using Client.Pages.ContentPages.UserPages
 @using Client.Pages.OtherPages
 @using Syncfusion.Blazor.DropDowns
 @using ClientLibrary.Services.Implementations
+@using Syncfusion.Blazor.Grids
+
 
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
@@ -33,7 +41,7 @@
 
 @inject SfDialogService dialogService
 
-@* @inject IJSRuntime JSRuntime *@
+@inject IJSRuntime JSRuntime
 
 @inject IGenericServiceInterface<AccountingApproval> accountingApprovalService
 @inject IGenericServiceInterface<AccountingComplete> accountingCompleteService
@@ -42,4 +50,4 @@
 @inject IGenericServiceInterface<OrderDelivery> orderDeliveryService
 @inject IGenericServiceInterface<OrderReceived> orderReceivedService
 @inject IGenericServiceInterface<PurchaseOrder> purchaseOrderService
-@inject IGenericServiceInterface<Request> requestService
+@inject IGenericServiceInterface<PurchaseRequest> purchaseRequestService

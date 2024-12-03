@@ -181,8 +181,5 @@
         await HandleSaveOperationEvent.InvokeAsync(AccountingApproval); // Triggers the save and calls DisplayMessage
     }
 
-    public void ChangeTitle(string title)
-    {
-        Title = title;
-    }
+    public void ChangeTitle(string title) => Title = title;
 }

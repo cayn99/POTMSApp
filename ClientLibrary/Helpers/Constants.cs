@@ -15,8 +15,6 @@ namespace ClientLibrary.Helpers
         public const string OrderDeliveryBaseUrl = "api/orderdelivery";
         public const string OrderReceivedBaseUrl = "api/orderreceived";
         public const string PurchaseOrderBaseUrl = "api/purchaseorder";
-        public const string RequestBaseUrl = "api/request";
-
-
+        public const string PurchaseRequestBaseUrl = "api/purchaserequest";
     }
 }

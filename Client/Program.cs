@@ -28,7 +28,7 @@ builder.Services.AddScoped<LocalStorageService>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
-builder.Services.AddScoped<IGenericServiceInterface<Request>, GenericServiceImplementation<Request>>();
+builder.Services.AddScoped<IGenericServiceInterface<PurchaseRequest>, GenericServiceImplementation<PurchaseRequest>>();
 builder.Services.AddScoped<IGenericServiceInterface<OrderDelivery>, GenericServiceImplementation<OrderDelivery>>();
 builder.Services.AddScoped<IGenericServiceInterface<PurchaseOrder>, GenericServiceImplementation<PurchaseOrder>>();
 builder.Services.AddScoped<IGenericServiceInterface<AccountingApproval>, 

@@ -1,51 +1,68 @@
 ﻿@if (ShowDetailsPage)
 {
-    <SfDialog Width="1000px" IsModal="true" @bind-Visible="ShowDetailsPage" Header="Purchase Order Details">
-                <div class="card border-success shadow-lg">
-                    <div class="card-header">Purchase Order #@PurchaseOrderDetails.Id Details</div>
-                    <div class="card-body">
-                        <div class="hstack gap-2">
-                            <div class="vstack gap-3">
-                                <table class="table border-danger">
-                                    <tbody>
-                                        <tr>
-                                            <td><h6 class="fw-bold-bold">ID:</h6></td>
-                                            <td> @PurchaseOrderDetails.Id</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Record Number:</h6></td>
-                                            <td> @PurchaseOrderDetails.RequestId</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Accounting:</h6></td>
-                                            <td> @PurchaseOrderDetails.AccountingCompleteId</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Delivery:</h6></td>
-                                            <td> @PurchaseOrderDetails.OrderReceivedId</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Commision on Audit:</h6></td>
-                                            <td> @PurchaseOrderDetails.CoaId</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Inspection:</h6></td>
-                                            <td> @PurchaseOrderDetails.InspectionId</td>
-                                        </tr>
-                                        <tr>
-                                            <td><h6 class="fw-bold">Remarks:</h6></td>
-                                            <td> @PurchaseOrderDetails.Remarks</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-danger" @onclick="DetailsPageCloseButtonClicked">Close</button>
-                        </div>
+    <SfDialog Width="1000px" IsModal="true" @bind-Visible="ShowDetailsPage">
+        <div class="card border-success shadow-lg">
+            <div class="card-header">Purchase Order #@PurchaseOrderDetails.PoNumber Details</div>
+            <div class="card-body">
+                <div class="hstack gap-2">
+                    <div class="vstack gap-3">
+                        <table class="table border-info">
+                            <tbody>
+                                <tr>
+                                    <td><h6 class="fw-bold-bold">Purchase Order Number:</h6></td>
+                                    <td> @PurchaseOrderDetails.PoNumber</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Supplier:</h6></td>
+                                    <td> @PurchaseOrderDetails.Supplier</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Address:</h6></td>
+                                    <td> @PurchaseOrderDetails.Address</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">TIN:</h6></td>
+                                    <td> @PurchaseOrderDetails.Tin</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Date:</h6></td>
+                                    <td> @PurchaseOrderDetails.Date</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Mode of Procurement:</h6></td>
+                                    <td> @PurchaseOrderDetails.Procurement</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Place of Delivery:</h6></td>
+                                    <td> @PurchaseOrderDetails.DeliveryPlace</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Delivery Term:</h6></td>
+                                    <td> @PurchaseOrderDetails.DeliveryTerm</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Date of Delivery:</h6></td>
+                                    <td> @PurchaseOrderDetails.DeliveryDays</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Payment Term:</h6></td>
+                                    <td> @PurchaseOrderDetails.PaymentTerm</td>
+                                </tr>
+                                <tr>
+                                    <td><h6 class="fw-bold">Remarks:</h6></td>
+                                    <td> @PurchaseOrderDetails.Remarks</td>
+                                </tr> 
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-</SfDialog>
+                <div class="card-footer">
+                    <button class="btn btn-primary float-start" @onclick="PrintDetailsPage">Print</button>
+                    <button class="btn btn-danger float-end" @onclick="DetailsPageCloseButtonClicked">Close</button>
+                </div>
+            </div>
+        </div>
+    </SfDialog>
 }
 @code {
     [Parameter] public bool ShowDetailsPage { get; set; }
@@ -53,4 +70,7 @@
     [Parameter] public EventCallback HandleDetailsPageCloseButtonClicked { get; set; } = new();
 
     async Task DetailsPageCloseButtonClicked() => await HandleDetailsPageCloseButtonClicked.InvokeAsync();
+
+    // Print function to trigger the browser's print dialog
+    void PrintDetailsPage() => JSRuntime.InvokeVoidAsync("window.print");
 }

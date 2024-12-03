@@ -171,7 +171,7 @@ namespace ServerLibrary.Repositories.Implementations
 			{
 				var userRole = allUserRoles.FirstOrDefault(u => u.UserId == user.Id);
 				var roleName = allRoles.FirstOrDefault(u => u.Id == userRole!.RoleId);
-				users.Add(new ManageUser() { UserId = user.Id, FirstName = user.FirstName!, MiddleName = user.MiddleName, LastName = user.LastName!, Email = user.Email!, Role = roleName!.Name! });
+				users.Add(new ManageUser() { UserId = user.Id, FirstName = user.FirstName!, LastName = user.LastName!, Email = user.Email!, Division = user.Division, Position = user.Position, Role = roleName!.Name! });
 			}
 			return users;
 		}

@@ -15,7 +15,7 @@ namespace ServerLibrary.Repositories.Implementations
     {
         public async Task<GeneralResponse> DeleteById(int id)
         {
-            var coa = await context.AllCoa.FindAsync(id);
+            var coa = await context.AllCoa!.FindAsync(id);
             if (coa == null)
                 return NotFound();
 
@@ -24,7 +24,7 @@ namespace ServerLibrary.Repositories.Implementations
             return Success();
         }
 
-        public async Task<List<Coa>> GetAll() => await context.AllCoa.ToListAsync();
+        public async Task<List<Coa>> GetAll() => await context.AllCoa!.AsNoTracking().Include(pr => pr.PurchaseRequest).ToListAsync();
         public async Task<Coa> GetById(int id) => await context.AllCoa.FindAsync(id);
 
         public async Task<GeneralResponse> Insert(Coa item)
@@ -36,9 +36,10 @@ namespace ServerLibrary.Repositories.Implementations
 
         public async Task<GeneralResponse> Update(Coa item)
         {
-            var coa = await context.AllCoa.FindAsync(item.Id);
+            var coa = await context.AllCoa!.FindAsync(item.Id);
             if (coa == null)
                 return NotFound();
+            coa.PurchaseRequestId = item.PurchaseRequestId;
             coa.OrderCopy = item.OrderCopy;
             coa.ReceivedBy = item.ReceivedBy;
             coa.InspectionRequest = item.InspectionRequest;

@@ -1,4 +1,4 @@
-﻿<SfDialog Width="280px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
+﻿<SfDialog Width="800px" IsModal="true" ShowCloseIcon="true" @bind-Visible="IsVisible">
     <DialogEvents OnOpen="OpenDialog"></DialogEvents>
     <DialogTemplates>
         <Header> @Title Purchase Order </Header>
@@ -7,31 +7,48 @@
                 <div class="card border-success">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="form-label">Id</label>
-                            <input @bind="PurchaseOrder.Id" class="form-control" disabled />
+                            <label class="form-label">Supplier</label>
+                            <InputText @bind-Value="PurchaseOrder.Supplier" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <InputText @bind-Value="PurchaseOrder.Address" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">TIN</label>
+                            <InputText @bind-Value="PurchaseOrder.Tin" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PO Number</label>
+                            <InputText @bind-Value="PurchaseOrder.PoNumber" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Received By</label>
+                            <InputDate @bind-Value="PurchaseOrder.Date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mode of Procurement</label>
+                            <InputText @bind-Value="PurchaseOrder.Procurement" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Place Of Delivery</label>
+                            <InputText @bind-Value="PurchaseOrder.DeliveryPlace" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Delivery Term</label>
+                            <InputText @bind-Value="PurchaseOrder.DeliveryTerm" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Term</label>
+                            <InputText @bind-Value="PurchaseOrder.PaymentTerm" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Delivery</label>
+                            <InputNumber @bind-Value="PurchaseOrder.DeliveryDays" class="form-control" />
                         </div>
                         <div class="form-group">
                             <label class="form-label">Remarks</label>
                             <InputTextArea @bind-Value="PurchaseOrder.Remarks" class="form-control" />
-                        </div>
-                        <div class="form-group mt-3 mb-3">
-                            <label class="form-label">Select Request</label>
-
-                            @if (PurchaseOrder.Request != null)
-                            {
-                                int selected = PurchaseOrder.Request!.RecordNumber;
-                                <SfDropDownList TValue="int" TItem="Request" Placeholder="@selected.ToString()" DataSource="Requests">
-                                    <DropDownListFieldSettings Value="Id" Text="RecordNumber"></DropDownListFieldSettings>
-                                    <DropDownListEvents TValue="int" TItem="Request" ValueChange="OnValueChange"></DropDownListEvents>
-                                </SfDropDownList>
-                            }
-                            else
-                            {
-                                <SfDropDownList TValue="int" TItem="Request" Placeholder="Select Request" DataSource="Requests">
-                                    <DropDownListFieldSettings Value="Id" Text="RecordNumber"></DropDownListFieldSettings>
-                                    <DropDownListEvents TValue="int" TItem="Request" ValueChange="OnValueChange"></DropDownListEvents>
-                                </SfDropDownList>
-                            }
                         </div>
                     </div>
                 </div>
@@ -42,35 +59,19 @@
         <DialogButton Content="SAVE" Type="ButtonType.Submit" IsPrimary="true" OnClick="Save" />
     </DialogButtons>
 </SfDialog>
-
 @code {
-    [Parameter] public PurchaseOrder PurchaseOrder { get; set; } = new();
-    [Parameter] public List<Request> Requests { get; set; } = new();
+    [Parameter]
+    public PurchaseOrder PurchaseOrder { get; set; } = new();
     [Parameter] public EventCallback<PurchaseOrder> HandleSaveOperationEvent { get; set; }
-
     private bool IsVisible { get; set; } = false;
     public string Title { get; set; } = "Add";
-    private async void Save()
-    {
-        if (string.IsNullOrEmpty(PurchaseOrder.Remarks) || PurchaseOrder.RequestId <= 0)
-            await dialogService.AlertAsync("You need to provide a remark.", "Alert!");
-        else
-            await HandleSaveOperationEvent.InvokeAsync(PurchaseOrder);
-    }
-
     public void OpenDialog()
     {
         IsVisible = true;
         StateHasChanged();
     }
 
-    public void ChangeTitle(string title)
-    {
-        Title = title;
-    }
+    async Task Save() => await HandleSaveOperationEvent.InvokeAsync(PurchaseOrder);
 
-    public void OnValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, Request> args)
-    {
-        PurchaseOrder.RequestId = args.Value;
-    }
+    public void ChangeTitle(string title) => Title = title;
 }

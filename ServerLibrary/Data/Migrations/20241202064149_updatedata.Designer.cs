@@ -12,8 +12,8 @@ using ServerLibrary.Data;
 namespace ServerLibrary.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241121013016_initial")]
-    partial class initial
+    [Migration("20241202064149_updatedata")]
+    partial class updatedata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,9 +83,15 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<bool>("Penalty")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PurchaseRequestId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountingApprovalId")
+                        .IsUnique();
+
+                    b.HasIndex("PurchaseRequestId")
                         .IsUnique();
 
                     b.ToTable("AllAccountingComplete");
@@ -109,11 +115,17 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<DateTime>("OrderCopy")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PurchaseRequestId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ReceivedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PurchaseRequestId")
+                        .IsUnique();
 
                     b.ToTable("AllCoa");
                 });
@@ -140,10 +152,16 @@ namespace ServerLibrary.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PurchaseRequestId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PurchaseRequestId")
+                        .IsUnique();
 
                     b.ToTable("Inspections");
                 });
@@ -184,7 +202,7 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<int>("DeliveryDays")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("ExtensionLetterContent")
+                    b.Property<byte[]>("ExtensionLetterFile")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ExtensionLetterFileName")
@@ -193,9 +211,15 @@ namespace ServerLibrary.Data.Migrations
                     b.Property<int>("OrderDeliveryId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PurchaseRequestId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderDeliveryId")
+                        .IsUnique();
+
+                    b.HasIndex("PurchaseRequestId")
                         .IsUnique();
 
                     b.ToTable("OrdersReceived");
@@ -209,43 +233,104 @@ namespace ServerLibrary.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountingCompleteId")
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("DeliveryDays")
                         .HasColumnType("int");
 
-                    b.Property<int>("CoaId")
-                        .HasColumnType("int");
+                    b.Property<string>("DeliveryPlace")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("InspectionId")
-                        .HasColumnType("int");
+                    b.Property<string>("DeliveryTerm")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderReceivedId")
+                    b.Property<string>("PaymentTerm")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PoNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Procurement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PurchaseRequestId")
                         .HasColumnType("int");
 
                     b.Property<string>("Remarks")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RequestId")
+                    b.Property<string>("Supplier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseRequestId")
+                        .IsUnique();
+
+                    b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.PurchaseRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("DeliveryArea")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeliveryTerm")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Division")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Particulars")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Requestor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitCost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UnitType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountingCompleteId")
-                        .IsUnique();
-
-                    b.HasIndex("CoaId")
-                        .IsUnique();
-
-                    b.HasIndex("InspectionId")
-                        .IsUnique();
-
-                    b.HasIndex("OrderReceivedId")
-                        .IsUnique();
-
-                    b.HasIndex("RequestId")
-                        .IsUnique();
-
-                    b.ToTable("PurchaseOrders");
+                    b.ToTable("PurchaseRequests");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.RefreshTokenInfo", b =>
@@ -265,64 +350,6 @@ namespace ServerLibrary.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RefreshTokenInfos");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Request", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("DateReceived")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Division")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FundSource")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Particulars")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProjectCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecordNumber")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RequestNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Requestor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Supplier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.SystemRole", b =>
@@ -402,7 +429,37 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BaseLibrary.Entities.PurchaseRequest", "PurchaseRequest")
+                        .WithOne("AccountingComplete")
+                        .HasForeignKey("BaseLibrary.Entities.AccountingComplete", "PurchaseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AccountingApproval");
+
+                    b.Navigation("PurchaseRequest");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
+                {
+                    b.HasOne("BaseLibrary.Entities.PurchaseRequest", "PurchaseRequest")
+                        .WithOne("Coa")
+                        .HasForeignKey("BaseLibrary.Entities.Coa", "PurchaseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PurchaseRequest");
+                });
+
+            modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
+                {
+                    b.HasOne("BaseLibrary.Entities.PurchaseRequest", "PurchaseRequest")
+                        .WithOne("Inspection")
+                        .HasForeignKey("BaseLibrary.Entities.Inspection", "PurchaseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PurchaseRequest");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
@@ -413,41 +470,40 @@ namespace ServerLibrary.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BaseLibrary.Entities.PurchaseRequest", "PurchaseRequest")
+                        .WithOne("OrderReceived")
+                        .HasForeignKey("BaseLibrary.Entities.OrderReceived", "PurchaseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("OrderDelivery");
+
+                    b.Navigation("PurchaseRequest");
                 });
 
             modelBuilder.Entity("BaseLibrary.Entities.PurchaseOrder", b =>
                 {
-                    b.HasOne("BaseLibrary.Entities.AccountingComplete", "AccountingComplete")
+                    b.HasOne("BaseLibrary.Entities.PurchaseRequest", "PurchaseRequest")
                         .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "AccountingCompleteId")
+                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "PurchaseRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BaseLibrary.Entities.Coa", "Coa")
-                        .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "CoaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("PurchaseRequest");
+                });
 
-                    b.HasOne("BaseLibrary.Entities.Inspection", "Inspection")
-                        .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "InspectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
+                {
+                    b.Navigation("AccountingComplete");
+                });
 
-                    b.HasOne("BaseLibrary.Entities.OrderReceived", "OrderReceived")
-                        .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "OrderReceivedId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
+                {
+                    b.Navigation("OrderReceived");
+                });
 
-                    b.HasOne("BaseLibrary.Entities.Request", "Request")
-                        .WithOne("PurchaseOrder")
-                        .HasForeignKey("BaseLibrary.Entities.PurchaseOrder", "RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
+            modelBuilder.Entity("BaseLibrary.Entities.PurchaseRequest", b =>
+                {
                     b.Navigation("AccountingComplete");
 
                     b.Navigation("Coa");
@@ -456,41 +512,6 @@ namespace ServerLibrary.Data.Migrations
 
                     b.Navigation("OrderReceived");
 
-                    b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.AccountingApproval", b =>
-                {
-                    b.Navigation("AccountingComplete");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.AccountingComplete", b =>
-                {
-                    b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Coa", b =>
-                {
-                    b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Inspection", b =>
-                {
-                    b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.OrderDelivery", b =>
-                {
-                    b.Navigation("OrderReceived");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.OrderReceived", b =>
-                {
-                    b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("BaseLibrary.Entities.Request", b =>
-                {
                     b.Navigation("PurchaseOrder");
                 });
 #pragma warning restore 612, 618
